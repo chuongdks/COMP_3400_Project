@@ -35,7 +35,7 @@ class Hospital {
                 doctors.push_back(new Doctor(*d));
             }
 
-            for (Nurse* n : other:nurses) {
+            for (Nurse* n : other.nurses) {
                 nurses.push_back(new Nurse(*n));
             }
         }
@@ -81,13 +81,53 @@ class Hospital {
         ~Hospital() 
         {
             for (Patient* p : patients) delete p;
+            patients.clear(); 
             for (Doctor* d : doctors) delete d;
+            doctors.clear();
             for (Nurse* n : nurses) delete n;
+            nurses.clear();
         }                                      
     
-        // void admitPatient(Patient* p);
-        // void dischargePatient(int patientID);
-        // void assignDoctor(Doctor* d);
-        // void assignNurse(Nurse* n);
-        // void displayHospitalInfo();
+        /*Methods for Hospital*/
+        // Add Patient to Hospital
+        void admitPatient(Patient* p) {
+            // check size of Patient Vector
+            if (patients.size() < MAX_CAPACITY) {   
+                patients.push_back(p);
+                std::cout << "Patient: " << p->getName() << " added to Hospital " << name << std::endl;
+            }
+            else {
+                std::cout << "Maximum number of patient is 20. Please come back later even if you have life threatening disease. \n";
+            }
+        }
+
+        // Remove patient from hospital using patient ID
+        void dischargePatient(int patientID) {
+            for (auto patient = patients.begin(); patient != patients.end(); ++patient) {
+                if ((*patient)->getId() == patientID) {
+                    patients.erase(patient);
+                    std::cout << "Patient " << (*patient)->getName() << " is dischared from Hospital " << name << std::endl;
+                    return;
+                }
+            }
+            std::cout << "Patient is not found. Please check the Patient ID again \n";
+        }
+
+        // Add Doctor to Hospital
+        void assignDoctor(Doctor* d) {
+            doctors.push_back(d);       // Hospital can add lots of doctors. Might change this
+        }
+
+        // Add nurse to Hospital
+        void assignNurse(Nurse* n) {
+            nurses.push_back(n);       // Hospital can add lots of nurses. Might change this
+        }
+
+        // Display the info of current Hospital
+        void displayHospitalInfo() {
+            std::cout << "Hospital name: " << name << std::endl;
+            std::cout << "Number of patients: " << patients.size() << std::endl;
+            std::cout << "Number of doctors: " << doctors.size() << std::endl;
+            std::cout << "Number of nurses: " << nurses.size() << std::endl;
+        }
 };

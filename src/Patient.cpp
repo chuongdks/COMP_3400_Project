@@ -5,7 +5,7 @@ class Patient {
     int id;
     std::string name;
     std::string disease;
-    
+
     int costPerDay;
     int daysInHospital;
 
@@ -15,12 +15,12 @@ class Patient {
         : id{ id }
         , name{ name }
         , disease{ disease }
-        , costPerDay{ 0 }
+        , costPerDay{ 10 }
         , daysInHospital { 0 } 
     {}
 
     // Getter methods
-    int getID() const {
+    int getId() const {
         return id;
     }
 
