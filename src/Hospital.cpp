@@ -43,14 +43,32 @@ class Hospital {
         // Copy Assignment
         Hospital& operator=(const Hospital& other)
         {
-            if (this != &other) {               // Handle self-assignment
-                Hospital local{other};          // Copy Constructor
-                std::swap(id, local.id);
-                std::swap(name, local.name);
-                std::swap(patients, local.patients);
-                std::swap(doctors, local.doctors);
-                std::swap(nurses, local.nurses);
+            if (this == &other) return *this;  // Handle self-assignment
+
+            // Step 1: Free old dynamically allocated memory
+            for (Patient* p : patients) delete p;
+            for (Doctor* d : doctors) delete d;
+            for (Nurse* n : nurses) delete n;
+        
+            // Step 2: Clear the vectors to avoid dangling pointers
+            patients.clear();
+            doctors.clear();
+            nurses.clear();
+        
+            // Step 3: Copy new data
+            id = other.id;
+            name = other.name;
+        
+            for (Patient* p : other.patients) {
+                patients.push_back(new Patient(*p)); // Deep copy
             }
+            for (Doctor* d : other.doctors) {
+                doctors.push_back(new Doctor(*d));
+            }
+            for (Nurse* n : other.nurses) {
+                nurses.push_back(new Nurse(*n));
+            }
+        
             return *this;
         }    
 
@@ -93,7 +111,8 @@ class Hospital {
         void admitPatient(Patient* p) {
             // check size of Patient Vector
             if (patients.size() < MAX_CAPACITY) {   
-                patients.push_back(p);
+                // patients.push_back(p);
+                patients.push_back(new Patient(*p));
                 std::cout << "Patient: " << p->getName() << " added to Hospital " << name << std::endl;
             }
             else {
@@ -105,8 +124,8 @@ class Hospital {
         void dischargePatient(int patientID) {
             for (auto patient = patients.begin(); patient != patients.end(); ++patient) {
                 if ((*patient)->getId() == patientID) {
-                    patients.erase(patient);
                     std::cout << "Patient " << (*patient)->getName() << " is dischared from Hospital " << name << std::endl;
+                    patients.erase(patient);
                     return;
                 }
             }
@@ -115,13 +134,17 @@ class Hospital {
 
         // Add Doctor to Hospital
         void assignDoctor(Doctor* d) {
-            doctors.push_back(d);       // Hospital can add lots of doctors. Might change this
+            doctors.push_back(new Doctor(*d));       // Hospital can add lots of doctors. Might change this
         }
+
+        // Remove Doctor from hospital using Doctor ID
 
         // Add nurse to Hospital
         void assignNurse(Nurse* n) {
-            nurses.push_back(n);       // Hospital can add lots of nurses. Might change this
+            nurses.push_back(new Nurse(*n));       // Hospital can add lots of nurses. Might change this
         }
+
+        // Remove Nurse from hospital using Nurse ID
 
         // Display the info of current Hospital
         void displayHospitalInfo() {
