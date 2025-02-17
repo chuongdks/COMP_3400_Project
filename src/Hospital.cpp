@@ -59,7 +59,7 @@ class Hospital {
         Hospital(Hospital&& other)
             : id{ std::exchange(other.id, 0) } // https://en.cppreference.com/w/cpp/language/move_constructor
             , name{ std::move(other.name) }
-            , patients{ std::move(other.patients) }
+            , patients{ std::move(other.patients) } // this works for move but patients{ other.patients } doesnt for copy constructor
             , doctors{ std::move(other.doctors) }
             , nurses{ std::move(other.nurses) }
         {}
@@ -99,7 +99,7 @@ class Hospital {
                 std::cout << "Patient: " << p->getName() << " added to Hospital " << name << std::endl;
             }
             else {
-                std::cout << "Maximum number of patient is 20. Please come back later even if you have life threatening disease. \n";
+                std::cout << "Maximum number of patient is 20. Please come back later even if you have life threatening disease.\n";
             }
         }
 
