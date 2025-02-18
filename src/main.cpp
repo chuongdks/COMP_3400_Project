@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Hospital.cpp"
-#include "Pharmacy.cpp"
+#include "./entities/Pharmacy.cpp"
 
 int main() {
     Hospital h1(1, "City Hospital");

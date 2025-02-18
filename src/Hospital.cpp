@@ -1,9 +1,9 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-#include "Patient.cpp"
-#include "Doctor.cpp"
-#include "Nurse.cpp"
+#include "./entities/Patient.cpp"
+#include "./entities/Doctor.cpp"
+#include "./entities/Nurse.cpp"
 
 // Hospital has-a Patients, Doctors and Nurses
 class Hospital {
