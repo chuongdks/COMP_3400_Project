@@ -11,13 +11,14 @@ class Patient {
 
     public:
     // Default constructor
-    Patient(int id, std::string name, std::string disease, int costPerDay, int daysInHospital)
-        : id{ id }
-        , name{ name }
+    Patient(std::string name, std::string disease, int costPerDay, int daysInHospital)
+        : name{ name }
         , disease{ disease }
         , costPerDay{ costPerDay }
         , daysInHospital { daysInHospital } 
-    {}
+    {
+
+    }
 
     /* Rule of Five */
     
@@ -33,6 +34,10 @@ class Patient {
 
     std::string getDisease() {
         return name;
+    }
+
+    int getCostPerDay() {
+        return costPerDay;
     }
 
     int getBill() const {

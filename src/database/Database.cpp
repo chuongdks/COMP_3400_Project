@@ -83,6 +83,16 @@ class Database {
         sqlite3_close(DB);
         return exit;
     }
+
+    // Fetch last inserted row ID
+    int getLastInsertedID() {
+        sqlite3* DB;
+        int lastID = -1;
+        sqlite3_open(filename, &DB);
+        lastID = sqlite3_last_insert_rowid(DB);
+        sqlite3_close(DB);
+        return lastID;
+    }
 };
 
 

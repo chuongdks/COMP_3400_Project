@@ -12,7 +12,7 @@ class Nurse {
     {}
 
     // Getter methods
-    int getID() const {
+    int getId() const {
         return id;
     }
 

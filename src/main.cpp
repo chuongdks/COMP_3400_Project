@@ -53,8 +53,14 @@ int main() {
     // Example: Insert a patient
     // db.executeSQL("INSERT INTO Patient (id, name, disease, bill, daysInHospital) VALUES (1, 'John Doe', 'Flu', 50, 0);");
 
-    Hospital h1(1, "City Hospital", db);
+    Hospital h1("City Hospital", db);
     h1.displayHospitalInfo();
+    Hospital h2("Town Hospital", db);
+    h2.displayHospitalInfo();
+    Hospital h3("Dirty Hospital", db);
+    h3.displayHospitalInfo();
+
+    Patient p1("John Doe", "Flu", 50, 0);
 
     return 0;
 }
