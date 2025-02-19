@@ -94,8 +94,8 @@ class Hospital {
         void admitPatient(Patient* p) {
             // check size of Patient Vector
             if (patients.size() < MAX_CAPACITY) {   
-                // patients.push_back(p);
-                patients.push_back(new Patient(*p));
+                 patients.push_back(new Patient(*p));
+                std::string sql = "INSERT INTO Patient (id, name, disease, bill) VALUES ("+std::to_string(p->getId())+", ' "+p->getName()+" ', ' "+ p->getDisease()+" ', 50);"; // (1, 'John Doe', 'Flu', 50)
                 std::cout << "Patient: " << p->getName() << " added to Hospital " << name << std::endl;
             }
             else {

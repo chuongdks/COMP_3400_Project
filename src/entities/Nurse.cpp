@@ -19,4 +19,6 @@ class Nurse {
     std::string getName() {
         return name;
     }    
+
+    // Setter methods
 };
