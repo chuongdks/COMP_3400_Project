@@ -51,36 +51,13 @@ static int createTable(const char* s)
 	sqlite3 *DB;
 	char* messageError;
 
-    std::string sql = R"(
-        CREATE TABLE IF NOT EXISTS Hospital (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS Patient (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            disease TEXT NOT NULL,
-            bill INTEGER NOT NULL,
-            daysInHospital INTEGER DEFAULT 0
-        );
-
-        CREATE TABLE IF NOT EXISTS Doctor (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            role TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS Nurse (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS Pharmacy (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL
-        );
-    )";
+	string sql = "CREATE TABLE IF NOT EXISTS GRADES("
+		"ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+		"NAME      TEXT NOT NULL, "
+		"LNAME     TEXT NOT NULL, "
+		"AGE       INT  NOT NULL, "
+		"ADDRESS   CHAR(50), "
+		"GRADE     CHAR(1) );";
 
 	try
 	{

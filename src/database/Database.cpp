@@ -1,3 +1,5 @@
+#ifndef DATABASE_H
+#define DATABASE_H
 #include <sqlite3.h>
 #include <iostream>
 #include <string>
@@ -7,7 +9,7 @@ using namespace std;
 class Database {
     private:
     const char* filename;
-    
+
     // Callback function for SELECT queries
     static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
         for (int i = 0; i < argc; i++) {
@@ -32,12 +34,12 @@ class Database {
     int createTable() {
         std::string sql = R"(
             CREATE TABLE IF NOT EXISTS Hospital (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL
             );
     
             CREATE TABLE IF NOT EXISTS Patient (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 disease TEXT NOT NULL,
                 bill INTEGER NOT NULL,
@@ -45,18 +47,18 @@ class Database {
             );
     
             CREATE TABLE IF NOT EXISTS Doctor (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 role TEXT NOT NULL
             );
     
             CREATE TABLE IF NOT EXISTS Nurse (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL
             );
     
             CREATE TABLE IF NOT EXISTS Pharmacy (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL
             );
         )";
@@ -84,3 +86,4 @@ class Database {
 };
 
 
+#endif

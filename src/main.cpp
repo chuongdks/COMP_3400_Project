@@ -7,7 +7,7 @@ int main() {
     // Hospital h1(1, "City Hospital");
     // Doctor d1(101, "Dr. Smith", "Cardiology");
     // Nurse n1(201, "Nurse Alice");
-    // Patient p1(301, "John Doe", "Flu");
+    // Patient p1(301, "John Doe", "Flu", 50, 0);
     // Pharmacy ph1(401, "MedCare Pharmacy");
 
     // h1.assignDoctor(&d1);
@@ -44,13 +44,17 @@ int main() {
     // h4 = std::move(h2);  // Calls Move Assignment Operator
     // h4.displayHospitalInfo();
 
+    // Create and Initialize the Database and table 
     const char* dbPath = "../db/hospital.db";
     Database db(dbPath);
     db.createDB();
     db.createTable();
 
     // Example: Insert a patient
-    db.executeSQL("INSERT INTO Patient (id, name, disease, bill, daysInHospital) VALUES (1, 'John Doe', 'Flu', 50, 0);");
+    // db.executeSQL("INSERT INTO Patient (id, name, disease, bill, daysInHospital) VALUES (1, 'John Doe', 'Flu', 50, 0);");
+
+    Hospital h1(1, "City Hospital", db);
+    h1.displayHospitalInfo();
 
     return 0;
 }

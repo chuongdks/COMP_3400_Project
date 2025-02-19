@@ -4,6 +4,7 @@
 #include "./entities/Patient.cpp"
 #include "./entities/Doctor.cpp"
 #include "./entities/Nurse.cpp"
+#include "./database/Database.cpp"
 
 // Hospital has-a Patients, Doctors and Nurses
 class Hospital {
@@ -14,18 +15,27 @@ class Hospital {
         std::vector<Doctor*> doctors;
         std::vector<Nurse*> nurses;
         static const int MAX_CAPACITY = 20;
+        Database& db;  // Reference to the Database class
     
     public:
         // Constructor
-        Hospital(int id, std::string name)
-            : id{ id }, name{ name }
-        {}
+        Hospital(int id, std::string name, Database& database)
+            : id{ id }
+            , name{ name }
+            , db{ database }
+        {
+            // Do database stuff here after initialization
+            std::string sql = "INSERT INTO Hospital (name) VALUES ('"+ name +"');";
+            db.executeSQL(sql);
+            std::cout << "Hospital created: " << name << " (ID: " << id << ")\n";
+        }
     
         /* Rule of Five */
         // Copy Constructor
         Hospital(const Hospital& other)
             : id{ other.id }
             , name{ other.name }
+            , db{ other.db }
         {
             for (Patient* p : other.patients) {
                 patients.push_back(new Patient(*p));
@@ -62,6 +72,7 @@ class Hospital {
             , patients{ std::move(other.patients) } // this works for move but patients{ other.patients } doesnt for copy constructor
             , doctors{ std::move(other.doctors) }
             , nurses{ std::move(other.nurses) }
+            , db{ other.db }
         {}
 
         // Move Assignment
@@ -131,6 +142,7 @@ class Hospital {
 
         // Display the info of current Hospital
         void displayHospitalInfo() {
+            std::cout << "Hospital id: " << id << std::endl;
             std::cout << "Hospital name: " << name << std::endl;
             std::cout << "Number of patients: " << patients.size() << std::endl;
             std::cout << "Number of doctors: " << doctors.size() << std::endl;
