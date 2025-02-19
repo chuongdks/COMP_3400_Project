@@ -1,125 +1,86 @@
 #include <sqlite3.h>
 #include <iostream>
-#include <vector>
 #include <string>
+
+using namespace std;
 
 class Database {
     private:
-    sqlite3* db;  // Database connection pointer
-    std::string dbName;
-
-    public:
-    // Create Database
-    Database(const std::string& filename) 
-        : dbName(filename) 
-    {
-        if (sqlite3_open(dbName.c_str(), &db) != SQLITE_OK) {
-            std::cerr << "Error opening database: " << sqlite3_errmsg(db) << std::endl;
-        } 
-        else {
-            std::cout << "Database connected: " << dbName << std::endl;
+    const char* filename;
+    
+    // Callback function for SELECT queries
+    static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
+        for (int i = 0; i < argc; i++) {
+            cout << azColName[i] << ": " << (argv[i] ? argv[i] : "NULL") << " | ";
         }
+        cout << endl;
+        return 0;
     }
 
-    // Creates tables if they don’t exist
-    void createTables() {
-        char* errorMessage = nullptr;
+    public:
+    Database(const char* dbFilename) 
+        : filename { dbFilename } 
+    {}
 
+    int createDB() {
+        sqlite3* DB;
+        int exit = sqlite3_open(filename, &DB);
+        sqlite3_close(DB);
+        return exit;
+    }
+
+    int createTable() {
         std::string sql = R"(
             CREATE TABLE IF NOT EXISTS Hospital (
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL
             );
-
+    
             CREATE TABLE IF NOT EXISTS Patient (
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL,
                 disease TEXT NOT NULL,
-                bill INTEGER NOT NULL
+                bill INTEGER NOT NULL,
                 daysInHospital INTEGER DEFAULT 0
             );
-
+    
             CREATE TABLE IF NOT EXISTS Doctor (
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL,
                 role TEXT NOT NULL
             );
-
+    
             CREATE TABLE IF NOT EXISTS Nurse (
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL
             );
-
+    
             CREATE TABLE IF NOT EXISTS Pharmacy (
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL
             );
         )";
 
-        // if (!executeQuery(sql)) {
-        //     std::cerr << "Failed to create tables." << std::endl;
-        // }
-
-        try
-        {
-            int exit = 0;
-            /* An open database, SQL to be evaluated, Callback function, 1st argument to callback, Error msg written here */
-            exit = sqlite3_exec(db, sql.c_str(), NULL, 0, &errorMessage);
-            if (exit != SQLITE_OK) {
-                std::cerr << "Error in createTable function." << std::endl;
-                sqlite3_free(errorMessage);
-            }
-            else
-                std::cout << "Table created Successfully" << std::endl;
-                sqlite3_close(db);
-        }
-        catch (const std::exception& e)
-        {
-            std::cerr << e.what();
-        }
+        return executeSQL(sql);
     }
 
-    // Destructor
-    ~Database() 
-    {
-        sqlite3_close(db);
-    }
-
-    // Executes INSERT, DELETE, UPDATE queries
-    bool executeQuery(const std::string& sql) {
-        char* errorMessage = nullptr;
-        int exit = sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage);
+    int executeSQL(const string& sql) {
+        sqlite3* DB;
+        char* messageError;
+        
+        int exit = sqlite3_open(filename, &DB);
+        exit = sqlite3_exec(DB, sql.c_str(), callback, NULL, &messageError);
 
         if (exit != SQLITE_OK) {
-            std::cerr << "SQL error: " << errorMessage << std::endl;
-            sqlite3_free(errorMessage);
-            return false;
-        }
-        return true;
-    }
-
-    // Fetches results for SELECT queries
-    std::vector<std::vector<std::string>> fetchQuery(const std::string& sql) {
-        std::vector<std::vector<std::string>> results;
-        sqlite3_stmt* stmt;
-
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-            int columnCount = sqlite3_column_count(stmt);
-
-            while (sqlite3_step(stmt) == SQLITE_ROW) {
-                std::vector<std::string> row;
-                for (int i = 0; i < columnCount; ++i) {
-                    const char* data = reinterpret_cast<const char*>(sqlite3_column_text(stmt, i));
-                    row.push_back(data ? data : "NULL");
-                }
-                results.push_back(row);
-            }
+            cerr << "SQL error: " << messageError << endl;
+            sqlite3_free(messageError);
         } else {
-            std::cerr << "Failed to execute SELECT query." << std::endl;
+            cout << "SQL executed successfully!" << endl;
         }
 
-        sqlite3_finalize(stmt);
-        return results;
+        sqlite3_close(DB);
+        return exit;
     }
 };
+
 

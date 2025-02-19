@@ -44,20 +44,13 @@ int main() {
     // h4 = std::move(h2);  // Calls Move Assignment Operator
     // h4.displayHospitalInfo();
 
-    Database db("../db/hospital.db");
-    db.createTables();
+    const char* dbPath = "../db/hospital.db";
+    Database db(dbPath);
+    db.createDB();
+    db.createTable();
 
     // Example: Insert a patient
-    db.executeQuery("INSERT INTO patients (id, name, disease, bill) VALUES (1, 'John Doe', 'Flu', 50);");
-
-    // Example: Fetch data
-    auto patients = db.fetchQuery("SELECT * FROM patients;");
-    for (const auto& row : patients) {
-        for (const auto& col : row) {
-            std::cout << col << " ";
-        }
-        std::cout << std::endl;
-    }
+    db.executeSQL("INSERT INTO Patient (id, name, disease, bill, daysInHospital) VALUES (1, 'John Doe', 'Flu', 50, 0);");
 
     return 0;
 }
