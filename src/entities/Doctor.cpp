@@ -1,8 +1,10 @@
 #include <iostream>
 
+// Doctor also has-a Patient. 
 class Doctor {
     private:
     int id;
+    // Add a Vector of pointers
     std::string name;
     std::string role;
 

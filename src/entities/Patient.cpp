@@ -16,9 +16,7 @@ class Patient {
         , disease{ disease }
         , costPerDay{ costPerDay }
         , daysInHospital { daysInHospital } 
-    {
-        
-    }
+    {}
 
     /* Rule of Five */
     
@@ -33,7 +31,7 @@ class Patient {
     }
 
     std::string getDisease() {
-        return name;
+        return disease;
     }
 
     int getCostPerDay() {

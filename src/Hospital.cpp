@@ -25,15 +25,7 @@ class Hospital {
         Hospital(std::string name, Database& database)
             : name{ name }
             , db{ database }
-        {
-            // Do database stuff here after initialization
-            std::string sql = "INSERT INTO Hospital (name) VALUES ('"+ name +"');";
-            db.executeSQL(sql);
-
-            // Fetch last inserted ID (Does not work)
-            id = db.getLastInsertedID();
-            std::cout << "Hospital created: " << name << " (ID: " << id << ")\n";
-        }
+        {}
     
         /* Rule of Five */
         // Copy Constructor
@@ -105,7 +97,22 @@ class Hospital {
             nurses.clear();
         }                                      
     
-        /*Methods for Hospital*/
+        /* Getter, Setter method for Hospital */
+        // Getter methods
+        int getId() const {
+            return id;
+        }
+
+        std::string getName() {
+            return name;
+        }
+
+        // Setter methods
+        void setId(int id) {
+            this->id = id;
+        }
+
+        /* Methods for Hospital */
         // Add Patient to Hospital
         void admitPatient(Patient* p) {
             // check size of Patient Vector
