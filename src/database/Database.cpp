@@ -8,6 +8,7 @@ using namespace std;
 
 class Database {
     private:
+    sqlite3* db;            // keep the same database connection for some methods
     const char* filename;
 
     // Callback function for SELECT queries
@@ -20,10 +21,24 @@ class Database {
     }
 
     public:
+    // Constructor for Database object
     Database(const char* dbFilename) 
-        : filename { dbFilename } 
-    {}
+        : filename{ dbFilename } 
+        , db{ nullptr }
+    {
+        if (sqlite3_open(filename, &db) != SQLITE_OK) {
+            cerr << "Error opening database: " << sqlite3_errmsg(db) << endl;
+        }
+    }
 
+    // Destructor
+    ~Database() {
+        if (db) {
+            sqlite3_close(db);
+        }
+    }
+
+    // Create database (Open and close function)
     int createDB() {
         sqlite3* DB;
         int exit = sqlite3_open(filename, &DB);
@@ -67,11 +82,9 @@ class Database {
     }
 
     int executeSQL(const string& sql) {
-        sqlite3* DB;
-        char* messageError;
+        char* messageError = nullptr;
         
-        int exit = sqlite3_open(filename, &DB);
-        exit = sqlite3_exec(DB, sql.c_str(), callback, NULL, &messageError);
+        int exit = sqlite3_exec(db, sql.c_str(), callback, NULL, &messageError);
 
         if (exit != SQLITE_OK) {
             cerr << "SQL error: " << messageError << endl;
@@ -79,19 +92,12 @@ class Database {
         } else {
             cout << "SQL executed successfully!" << endl;
         }
-
-        sqlite3_close(DB);
         return exit;
     }
 
     // Fetch last inserted row ID
     int getLastInsertedID() {
-        sqlite3* DB;
-        int lastID = -1;
-        sqlite3_open(filename, &DB);
-        lastID = sqlite3_last_insert_rowid(DB);
-        sqlite3_close(DB);
-        return lastID;
+        return sqlite3_last_insert_rowid(db);
     }
 };
 

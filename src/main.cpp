@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Hospital.cpp"
+#include "HospitalManager.cpp"
 #include "./entities/Pharmacy.cpp"
 #include "./database/Database.cpp"
 
@@ -45,20 +45,21 @@ int main() {
 
     // Create and Initialize the Database and table 
     const char* dbPath = "../db/hospital.db";
-    Database db(dbPath);
-    db.createDB();
+    Database db(dbPath);         // Create Database instance
     db.createTable();
 
     // Example: Insert a patient
     // db.executeSQL("INSERT INTO Patient (id, name, disease, bill, daysInHospital) VALUES (1, 'John Doe', 'Flu', 50, 0);");
 
-    Hospital h1("City Hospital");
-    Patient p1("John Doe", "Flu", 50, 0);
-    Doctor d1(101, "Dr. Smith", "Cardiology");
-    Nurse n1(201, "Nurse Alice");
+    HospitalManager manager(db); // Pass db to HospitalManager
 
-    h1.admitPatient(&p1);
-    h1.displayHospitalInfo();
+    // Add a hospital (Database will be passed automatically)
+    manager.addHospital("City Hospital 1");
+    manager.addHospital("City Hospital 2");
+    manager.addHospital("City Hospital 3");
+    manager.addHospital("City Hospital 4");
+    manager.addHospital("City Hospital 5");
+    manager.addHospital("City Hospital 6");
     return 0;
 }
 

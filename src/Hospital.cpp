@@ -214,7 +214,7 @@ class Hospital {
         }
 
         // Remove Nurse from hospital using Nurse ID
-        void removeDoctor(int nurseID) {
+        void removeNurse(int nurseID) {
             for (auto nurse = nurses.begin(); nurse != nurses.end(); ++nurse) {
                 // Content of the nurse iterator is a pointer to Doctor object
                 if ((*nurse)->getId() == nurseID) {

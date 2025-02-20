@@ -14,19 +14,20 @@ class HospitalManager {
     {}
 
     // Add Hospital to Management System
-    void addHospital(Hospital* h) {
+    void addHospital(std::string hospitalName) {
         // check size of Hospital
         if (hospitals.size() < MAX_HOSPITALS) {
             // push to Hospital vector
-            hospitals.push_back(new Hospital(*h));
+            Hospital* newHospital = new Hospital(hospitalName, db);
+            hospitals.push_back(newHospital);
 
             // Database Insert query
-            std::string sql = "INSERT INTO Hospital (name) VALUES ('" + h->getName() + "');";
+            std::string sql = "INSERT INTO Hospital (name) VALUES ('" + newHospital->getName() + "');";
             db.executeSQL(sql);
 
             // Fetch last inserted ID (Does not work)
-            h->setId(db.getLastInsertedID());
-            std::cout << "Hospital created: " <<  h->getName() << " (ID: " << h->getId() << ")\n";
+            newHospital->setId(db.getLastInsertedID());
+            std::cout << "Hospital created: " <<  newHospital->getName() << " (ID: " << newHospital->getId() << ")\n";
         }
         else {
             std::cout << "Maximum number of hospitals is " << MAX_HOSPITALS << ". Cannot add more hospitals.\n";
