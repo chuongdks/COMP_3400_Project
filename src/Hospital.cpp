@@ -6,7 +6,7 @@
 #include "./entities/Nurse.cpp"
 #include "./database/Database.cpp"
 
-// Hospital has-a Patients, Doctors and Nurses
+// Hospital has-a Patients, Doctors and Nurses. Manage them too
 class Hospital {
     private:
         int id;
@@ -14,8 +14,11 @@ class Hospital {
         std::vector<Patient*> patients;
         std::vector<Doctor*> doctors;
         std::vector<Nurse*> nurses;
-        static const int MAX_CAPACITY = 20;
         Database& db;  // Reference to the Database class
+
+        static const int MAX_PATIENT_CAPACITY = 20;
+        static const int MAX_DOCTOR_CAPACITY = 10;
+        static const int MAX_NURSE_CAPACITY = 12;
     
     public:
         // Constructor
@@ -106,7 +109,7 @@ class Hospital {
         // Add Patient to Hospital
         void admitPatient(Patient* p) {
             // check size of Patient Vector
-            if (patients.size() < MAX_CAPACITY) {   
+            if (patients.size() < 5) {   
                 // Push to Vector
                 patients.push_back(new Patient(*p));
 
@@ -148,7 +151,7 @@ class Hospital {
         // Add Doctor to Hospital
         void assignDoctor(Doctor* d) {
             // check size of Doctors Vector
-            if (doctors.size() < 10) {   
+            if (doctors.size() < 5) {   
                 // Push to Vector
                 doctors.push_back(new Doctor(*d));       // Hospital can add lots of doctors. Might change this
 
@@ -188,7 +191,7 @@ class Hospital {
         // Add nurse to Hospital
         void assignNurse(Nurse* n) {
             // check size of Doctors Vector
-            if (nurses.size() < 12) {   
+            if (nurses.size() < 5) {   
                 // Push to Vector
                 nurses.push_back(new Nurse(*n));       // Hospital can add lots of nurses. Might change this
 

@@ -4,7 +4,6 @@
 #include "./database/Database.cpp"
 
 int main() {
-    // Hospital h1(1, "City Hospital");
     // Doctor d1(101, "Dr. Smith", "Cardiology");
     // Nurse n1(201, "Nurse Alice");
     // Patient p1(301, "John Doe", "Flu", 50, 0);
@@ -54,14 +53,12 @@ int main() {
     // db.executeSQL("INSERT INTO Patient (id, name, disease, bill, daysInHospital) VALUES (1, 'John Doe', 'Flu', 50, 0);");
 
     Hospital h1("City Hospital", db);
-    h1.displayHospitalInfo();
-    Hospital h2("Town Hospital", db);
-    h2.displayHospitalInfo();
-    Hospital h3("Dirty Hospital", db);
-    h3.displayHospitalInfo();
-
     Patient p1("John Doe", "Flu", 50, 0);
-
+    Doctor d1(101, "Dr. Smith", "Cardiology");
+    Nurse n1(201, "Nurse Alice");
+    
+    h1.admitPatient(&p1);
+    h1.displayHospitalInfo();
     return 0;
 }
 

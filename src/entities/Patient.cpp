@@ -17,7 +17,7 @@ class Patient {
         , costPerDay{ costPerDay }
         , daysInHospital { daysInHospital } 
     {
-
+        
     }
 
     /* Rule of Five */
