@@ -4,9 +4,10 @@
 class Doctor {
     private:
     int id;
-    // Add a Vector of pointers
     std::string name;
     std::string role;
+    std::string hospitalAdmitted;
+    // Add Vector of Patients (Doctor treat ultiple Patients)
 
     public: 
     Doctor(int id, std::string name, std::string role)

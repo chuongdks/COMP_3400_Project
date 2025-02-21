@@ -48,18 +48,30 @@ int main() {
     Database db(dbPath);         // Create Database instance
     db.createTable();
 
-    // Example: Insert a patient
-    // db.executeSQL("INSERT INTO Patient (id, name, disease, bill, daysInHospital) VALUES (1, 'John Doe', 'Flu', 50, 0);");
-
+    // Hospital manager object
     HospitalManager manager(db); // Pass db to HospitalManager
 
-    // Add a hospital (Database will be passed automatically)
+    // Add some hospitals
     manager.addHospital("City Hospital 1");
     manager.addHospital("City Hospital 2");
-    manager.addHospital("City Hospital 3");
-    manager.addHospital("City Hospital 4");
-    manager.addHospital("City Hospital 5");
-    manager.addHospital("City Hospital 6");
+
+    // Create Patients
+    Patient* patient1 = new Patient("John Doe", "Flu", 50, 7);
+    Patient* patient2 = new Patient("Jane Smith", "Covid-19", 100, 7);
+
+    // Admit patients to a hospital
+    manager.admitPatientToHospital(1, patient1);
+    manager.admitPatientToHospital(1, patient2);
+
+    // Display hospitals and their patients
+    manager.displayAllHospitals();
+
+    // Remove a patient
+    manager.dischargePatientFromHospital(1, 1);
+
+    // // Remove Hospital
+    // manager.removeHospital(1);
+
     return 0;
 }
 

@@ -5,9 +5,10 @@ class Patient {
     int id;
     std::string name;
     std::string disease;
-
     int costPerDay;
     int daysInHospital;
+    std::string hospitalAdmitted;
+    // Add Vector of Doctors (Patients can be treated by multiple doctor)   
 
     public:
     // Default constructor
@@ -43,6 +44,10 @@ class Patient {
     }
     
     // Setter methods
+    void setId(int id) {
+        this->id = id;
+    }
+    
     void updateDays(int days) {
         daysInHospital = days;
     }

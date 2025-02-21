@@ -11,7 +11,7 @@ class Database {
     sqlite3* db;            // keep the same database connection for some methods
     const char* filename;
 
-    // Callback function for SELECT queries
+    // Callback function for SELECT queries (Do we need this thing?)
     static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
         for (int i = 0; i < argc; i++) {
             cout << azColName[i] << ": " << (argv[i] ? argv[i] : "NULL") << " | ";
@@ -38,7 +38,7 @@ class Database {
         }
     }
 
-    // Create database (Open and close function)
+    // Create database (No need for this anymore since we have db as an object and it close on destructor)
     int createDB() {
         sqlite3* DB;
         int exit = sqlite3_open(filename, &DB);

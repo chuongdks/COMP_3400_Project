@@ -118,7 +118,7 @@ class Hospital {
             // check size of Patient Vector
             if (patients.size() < 5) {   
                 // Push to Vector
-                patients.push_back(new Patient(*p));
+                patients.push_back(new Patient(*p));        // Patinet class doesnt need database...yet. If it does, do as addHospital()
 
                 // Database Insert query
                 std::string sql = "INSERT INTO Patient (name, disease, bill) VALUES ('"
@@ -128,6 +128,9 @@ class Hospital {
                 db.executeSQL(sql);
 
                 std::cout << "Patient: " << p->getName() << " added to Hospital " << name << std::endl;
+                // Fetch last inserted ID (Does not work)
+                p->setId(db.getLastInsertedID());
+                std::cout << "Patient created: " <<  p->getName() << " (ID: " << p->getId() << ")\n";
             }
             else {
                 std::cout << "Maximum number of patient is 20. Please come back later even if you have life threatening disease.\n";
