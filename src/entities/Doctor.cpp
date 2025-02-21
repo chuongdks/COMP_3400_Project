@@ -10,9 +10,8 @@ class Doctor {
     // Add Vector of Patients (Doctor treat ultiple Patients)
 
     public: 
-    Doctor(int id, std::string name, std::string role)
-        : id{ id }
-        , name{ name }
+    Doctor(std::string name, std::string role)
+        : name{ name }
         , role{ role }
     {}
 
@@ -30,5 +29,8 @@ class Doctor {
     }    
 
     // Setter methods
-    
+    void setId(int id) {
+        this->id = id;
+    }
+
 };

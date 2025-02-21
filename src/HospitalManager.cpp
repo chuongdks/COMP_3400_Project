@@ -44,26 +44,6 @@ class HospitalManager {
         }
     }
 
-    // // Add Hospital to Management System (Overload method, argunment is pointer to Hospital. Need Fix)
-    // void addHospital(Hospital* h) {
-    //     // check size of Hospital
-    //     if (hospitals.size() < MAX_HOSPITALS) {
-    //         // push to Hospital vector
-    //         hospitals.push_back(new Hospital(*h, db));
-
-    //         // Database Insert query
-    //         std::string sql = "INSERT INTO Hospital (name) VALUES ('" + h->getName() + "');";
-    //         db.executeSQL(sql);
-
-    //         // Fetch last inserted ID (Does not work)
-    //         h->setId(db.getLastInsertedID());
-    //         std::cout << "Hospital created: " <<  h->getName() << " (ID: " << h->getId() << ")\n";
-    //     }
-    //     else {
-    //         std::cout << "Maximum number of hospitals is " << MAX_HOSPITALS << ". Cannot add more hospitals.\n";
-    //     }
-    // }
-
     // Remove a hospital based on Hospital ID
     void removeHospital(int hospitalID) {
         for (auto hospital = hospitals.begin(); hospital != hospitals.end(); ++hospital) {
@@ -107,11 +87,55 @@ class HospitalManager {
         std::cout << "Hospital with ID " << hospitalID << " not found.\n";
     }
 
-    // Remove a patient from a specific hospital
+    // Remove a Patient from a specific hospital
     void dischargePatientFromHospital(int hospitalID, int patientID) {
         for (Hospital* hospital : hospitals) {
             if (hospital->getId() == hospitalID) {
                 hospital->dischargePatient(patientID);  // Use the Hospital's method dischargePatient()
+                return;
+            }
+        }
+        std::cout << "Hospital with ID " << hospitalID << " not found.\n";
+    }
+
+    // Add Doctor to a Specific Hospital
+    void assignDoctorToHospital(int hospitalID, Doctor* doctor) {
+        for (Hospital* hospital : hospitals) {
+            if (hospital->getId() == hospitalID) {
+                hospital->assignDoctor(doctor);        // Use the Hospital's method assignDoctor()
+                return;
+            }
+        }
+        std::cout << "Hospital with ID " << hospitalID << " not found.\n";
+    }
+
+    // Remove a Doctor from a specific hospital
+    void removeDoctorFromHospital(int hospitalID, int doctorID) {
+        for (Hospital* hospital : hospitals) {
+            if (hospital->getId() == hospitalID) {
+                hospital->removeDoctor(doctorID);      // Use the Hospital's method removeDoctor()
+                return;
+            }
+        }
+        std::cout << "Hospital with ID " << hospitalID << " not found.\n";
+    }
+
+    // Add Nurse to a Specific Hospital
+    void assignNurseToHospital(int hospitalID, Nurse* nurse) {
+        for (Hospital* hospital : hospitals) {
+            if (hospital->getId() == hospitalID) {
+                hospital->assignNurse(nurse);           // Use the Hospital's method assignNurse()
+                return;
+            }
+        }
+        std::cout << "Hospital with ID " << hospitalID << " not found.\n";
+    }
+
+    // Remove a Nurse from a specific hospital
+    void removeNurseFromHospital(int hospitalID, int nurseID) {
+        for (Hospital* hospital : hospitals) {
+            if (hospital->getId() == hospitalID) {
+                hospital->removeNurse(nurseID);  // Use the Hospital's method removeNurse()
                 return;
             }
         }

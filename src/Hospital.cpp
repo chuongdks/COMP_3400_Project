@@ -161,20 +161,23 @@ class Hospital {
         // Add Doctor to Hospital
         void assignDoctor(Doctor* d) {
             // check size of Doctors Vector
-            if (doctors.size() < 5) {   
+            if (doctors.size() < 3) {                   // Remember to change to MAX_DOCTOR_CAPACITY
                 // Push to Vector
-                doctors.push_back(new Doctor(*d));       // Hospital can add lots of doctors. Might change this
+                Doctor* newDoctor = new Doctor(*d);
+                doctors.push_back(newDoctor);       
 
                 // Database Insert query
                 std::string sql = "INSERT INTO Doctor (name, role) VALUES ('" 
-                                    + d->getName() + "', '" 
-                                    + d->getRole() + "');";
+                                    + newDoctor->getName() + "', '" 
+                                    + newDoctor->getRole() + "');";
                 db.executeSQL(sql);
 
-                std::cout << "Doctor " << d->getName() << " assigned to Hospital " << name << std::endl;
+                // Fetch last inserted ID (Does not work)
+                newDoctor->setId(db.getLastInsertedID());
+                std::cout << "Doctor " << newDoctor->getName() << " assigned to Hospital " << name << " (ID: " << newDoctor->getId() << ")" << std::endl;
             }
             else {
-                std::cout << "Maximum number of doctor is 10. Please come back later even if you have life threatening disease.\n";
+                std::cout << "Maximum number of doctor is 10. We dont have enough money to hire more doktor.\n";
             }
         }
 
@@ -192,24 +195,28 @@ class Hospital {
                     // Delete it in memory and Vector
                     delete *doctor;
                     doctors.erase(doctor);
+
                     return;
                 }
             }
-            std::cout << "Doctor is not found. Please check the Patient ID again.\n";
+            std::cout << "Doctor is not found. Please check the Doctor ID again.\n";
         }
 
         // Add nurse to Hospital
         void assignNurse(Nurse* n) {
             // check size of Doctors Vector
-            if (nurses.size() < 5) {   
+            if (nurses.size() < 5) {                    // Remember to change to MAX_DOCTOR_CAPACITY
                 // Push to Vector
-                nurses.push_back(new Nurse(*n));       // Hospital can add lots of nurses. Might change this
+                Nurse* newNurse = new Nurse(*n);
+                nurses.push_back(newNurse);      
 
                 // Database Insert query
-                std::string sql = "INSERT INTO Nurse (name) VALUES ('" + n->getName() + "');";
+                std::string sql = "INSERT INTO Nurse (name) VALUES ('" + newNurse->getName() + "');";
                 db.executeSQL(sql);
 
-                std::cout << "Nurse " << n->getName() << " assigned to Hospital " << name << std::endl;
+                // Fetch last inserted ID (Does not work)
+                newNurse->setId(db.getLastInsertedID());
+                std::cout << "Nurse " << newNurse->getName() << " assigned to Hospital " << name << " (ID: " << newNurse->getId() << ")" << std::endl;
             }
             else {
                 std::cout << "Maximum number of nurse is 12. Please come back later even if you have life threatening disease.\n";
@@ -219,17 +226,18 @@ class Hospital {
         // Remove Nurse from hospital using Nurse ID
         void removeNurse(int nurseID) {
             for (auto nurse = nurses.begin(); nurse != nurses.end(); ++nurse) {
-                // Content of the nurse iterator is a pointer to Doctor object
+                // Content of the Nurse iterator is a pointer to Nurse object
                 if ((*nurse)->getId() == nurseID) {
-                    std::cout << "Doctor " << (*nurse)->getName() << " is removed from Hospital " << name << std::endl;
+                    std::cout << "Nurse " << (*nurse)->getName() << " is removed from Hospital " << name << std::endl;
 
                     // Database Delete query
-                    std::string sql = "DELETE FROM Doctor WHERE id = " + std::to_string(nurseID) + ";";
+                    std::string sql = "DELETE FROM Nurse WHERE id = " + std::to_string(nurseID) + ";";
                     db.executeSQL(sql);
 
                     // Delete it in memory and Vector
                     delete *nurse;
                     nurses.erase(nurse);
+
                     return;
                 }
             }

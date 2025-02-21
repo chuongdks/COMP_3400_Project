@@ -8,9 +8,8 @@ class Nurse {
     // Add Vector of Patients (Nurse treat max of 2 Patients)
 
     public:
-    Nurse(int id, std::string name)
-        : id{ id }
-        , name{ name }
+    Nurse(std::string name)
+        : name{ name }
     {}
 
     // Getter methods
@@ -23,4 +22,7 @@ class Nurse {
     }    
 
     // Setter methods
+    void setId(int id) {
+        this->id = id;
+    }
 };
