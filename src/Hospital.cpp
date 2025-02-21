@@ -116,21 +116,21 @@ class Hospital {
         // Add Patient to Hospital
         void admitPatient(Patient* p) {
             // check size of Patient Vector
-            if (patients.size() < 5) {   
+            if (patients.size() < 3) {                      // Remember to change to MAX_PATIENT_CAPACITY
                 // Push to Vector
-                patients.push_back(new Patient(*p));        // Patinet class doesnt need database...yet. If it does, do as addHospital()
+                Patient* newPatient = new Patient(*p);      // put new Patient(*p) in push_back just create a copy
+                patients.push_back(newPatient);             // Patinet class doesnt need database...yet. If it does, do as addHospital()
 
                 // Database Insert query
                 std::string sql = "INSERT INTO Patient (name, disease, bill) VALUES ('"
-                                    + p->getName() + "', '"
-                                    + p->getDisease()+"', "
-                                    + std::to_string(p->getCostPerDay()) + ");"; // (1, 'John Foo', 'Flu', 50)
+                                    + newPatient->getName() + "', '"
+                                    + newPatient->getDisease() + "', "
+                                    + std::to_string(newPatient->getCostPerDay()) + ");"; // ('John Foo', 'Flu', 50, 7)
                 db.executeSQL(sql);
 
-                std::cout << "Patient: " << p->getName() << " added to Hospital " << name << std::endl;
                 // Fetch last inserted ID (Does not work)
-                p->setId(db.getLastInsertedID());
-                std::cout << "Patient created: " <<  p->getName() << " (ID: " << p->getId() << ")\n";
+                newPatient->setId(db.getLastInsertedID());
+                std::cout << "Patient: " << newPatient->getName() << " added to Hospital " << name << " (ID: " << newPatient->getId() << ")" << std::endl;
             }
             else {
                 std::cout << "Maximum number of patient is 20. Please come back later even if you have life threatening disease.\n";
