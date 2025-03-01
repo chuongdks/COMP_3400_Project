@@ -9,6 +9,8 @@ class Patient {
     int daysInHospital;
     std::string hospitalAdmitted;
     // Add Vector of Doctors (Patients can be treated by multiple doctor)   
+    // Doctor* primaryDoctor;           // Only 1 primary doctor
+    // std::vector<Doctor*> doctors;    // Multiple treating doctors
 
     public:
     // Default constructor
@@ -22,37 +24,15 @@ class Patient {
     
 
     // Getter methods
-    int getId() const {
-        return id;
-    }
-
-    std::string getName() {
-        return name;
-    }
-
-    std::string getDisease() {
-        return disease;
-    }
-
-    int getCostPerDay() {
-        return costPerDay;
-    }
-
-    int getdaysInHospital() {
-        return costPerDay;
-    }
-
-    int getBill() const {
-        return daysInHospital * costPerDay;
-    }
+    int getId() const { return id; }
+    std::string getName() { return name; }
+    std::string getDisease() { return disease; }
+    int getCostPerDay() { return costPerDay; }
+    int getdaysInHospital() { return daysInHospital; }
+    int getBill() const { return daysInHospital * costPerDay; }
     
     // Setter methods
-    void setId(int id) {
-        this->id = id;
-    }
-
-    void updateDays(int days) {
-        daysInHospital = days;
-    }
+    void setId(int id) { this->id = id; }
+    void setDaysInHospital(int days) { this->daysInHospital = days; }
 
 };

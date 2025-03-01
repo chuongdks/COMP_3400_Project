@@ -9,6 +9,7 @@ class HospitalManager {
     static const int MAX_HOSPITALS = 5;
 
     public:
+    // Constructor
     HospitalManager(Database& database) 
         : db(database) 
     {}
@@ -22,7 +23,10 @@ class HospitalManager {
     /* Getter, Setter method for Hospital Manager */
 
 
-    /* Hospital Manager methods */
+    /* 
+        Hospital Manager methods 
+    */
+/*Hospital related methods*/
     // Add Hospital to Management System
     void addHospital(std::string hospitalName) {
         // check size of Hospital
@@ -76,6 +80,7 @@ class HospitalManager {
         return nullptr;
     }
 
+/*Patient related methods*/
     // Add Patient to a Specific Hospital
     void admitPatientToHospital(int hospitalID, Patient* patient) {
         for (Hospital* hospital : hospitals) {
@@ -98,6 +103,7 @@ class HospitalManager {
         std::cout << "Hospital with ID " << hospitalID << " not found.\n";
     }
 
+/*Doctor related methods*/
     // Add Doctor to a Specific Hospital
     void assignDoctorToHospital(int hospitalID, Doctor* doctor) {
         for (Hospital* hospital : hospitals) {
@@ -120,6 +126,7 @@ class HospitalManager {
         std::cout << "Hospital with ID " << hospitalID << " not found.\n";
     }
 
+/*Nurse related methods*/
     // Add Nurse to a Specific Hospital
     void assignNurseToHospital(int hospitalID, Nurse* nurse) {
         for (Hospital* hospital : hospitals) {
@@ -142,6 +149,7 @@ class HospitalManager {
         std::cout << "Hospital with ID " << hospitalID << " not found.\n";
     }
 
+/*Display method*/
     // Display all hospitals
     void displayAllHospitals() {
         for (Hospital* h : hospitals) {

@@ -7,7 +7,7 @@ class Doctor {
     std::string name;
     std::string role;
     std::string hospitalAdmitted;
-    // Add Vector of Patients (Doctor treat ultiple Patients)
+    // Add Vector of Patients (Doctor treat multiple Patients)
 
     public: 
     Doctor(std::string name, std::string role)
