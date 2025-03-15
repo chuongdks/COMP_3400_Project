@@ -4,15 +4,20 @@
 // Manage the Hospital class
 class HospitalManager {
     private:
-    std::vector<Hospital*> hospitals;
     Database& db;
     static const int MAX_HOSPITALS = 5;
 
     public:
-    // Constructor
+    std::vector<Hospital*> hospitals;
+    // Constructor, program read data from hospital.db to fill the vector first
     HospitalManager(Database& database) 
         : db(database) 
-    {}
+    {auto hospitalsData = db.getAllHospitals();
+        for (const auto& [id, name] : hospitalsData) {
+            Hospital* hospital = new Hospital(name, db);
+            hospital->setId(id);
+            hospitals.push_back(hospital);
+        }}
 
     // Destructor
     ~HospitalManager() {
@@ -44,7 +49,7 @@ class HospitalManager {
             std::cout << "Hospital created: " <<  newHospital->getName() << " (ID: " << newHospital->getId() << ")\n";
         }
         else {
-            std::cout << "Maximum number of hospitals is " << MAX_HOSPITALS << ". Cannot add more hospitals.\n";
+            std::cout << "Maximum number of hospitals is " << MAX_HOSPITALS << ".\n";
         }
     }
 
@@ -66,7 +71,7 @@ class HospitalManager {
                 return;
             }
         }
-        std::cout << "Hospital is not found. Please check the Hospital ID again \n";        
+        std::cout << "Hospital is not found.\n";        
     }
 
     // Return Hospital pointer by Hospital ID
@@ -76,7 +81,7 @@ class HospitalManager {
                 return hospital;
             }
         }
-        std::cout << "Hospital is not found. Please check the Hospital ID again \n";      
+        std::cout << "Hospital is not found. \n";      
         return nullptr;
     }
 
@@ -92,11 +97,10 @@ class HospitalManager {
         std::cout << "Hospital with ID " << hospitalID << " not found.\n";
     }
 
-    // Remove a Patient from a specific hospital
-    void dischargePatientFromHospital(int hospitalID, int patientID) {
+    void dischargePatientFromHospital(int hospitalID, int patientID, int doctorID) {
         for (Hospital* hospital : hospitals) {
             if (hospital->getId() == hospitalID) {
-                hospital->dischargePatient(patientID);  // Use the Hospital's method dischargePatient()
+                hospital->dischargePatient(patientID, doctorID);
                 return;
             }
         }
@@ -148,6 +152,10 @@ class HospitalManager {
         }
         std::cout << "Hospital with ID " << hospitalID << " not found.\n";
     }
+    
+    std::vector<Hospital*>& getHospitals() {
+        return hospitals;
+    }
 
 /*Display method*/
     // Display all hospitals
@@ -155,6 +163,38 @@ class HospitalManager {
         for (Hospital* h : hospitals) {
             h->displayHospitalInfo();
             std::cout << std::endl;
+        }
+    }
+    void displayAllDoctors() {
+        std::cout << "\nAll Doctors:\n";
+        bool found = false;
+        for (Hospital* hospital : hospitals) {
+            for (Doctor* doctor : hospital->doctors) { 
+                std::cout << "Hospital ID: " << hospital->getId() 
+                          << ", Doctor ID: " << doctor->getId() 
+                          << ", Name: " << doctor->getName() 
+                          << ", Role: " << doctor->getRole() << std::endl;
+                found = true;
+            }
+        }
+        if (!found) {
+            std::cout << "No doctors found.\n";
+        }
+    }
+
+    void displayAllNurses() {
+        std::cout << "\nAll Nurses:\n";
+        bool found = false;
+        for (Hospital* hospital : hospitals) {
+            for (Nurse* nurse : hospital->nurses) { 
+                std::cout << "Hospital ID: " << hospital->getId() 
+                          << ", Nurse ID: " << nurse->getId() 
+                          << ", Name: " << nurse->getName() << std::endl;
+                found = true;
+            }
+        }
+        if (!found) {
+            std::cout << "No nurses found.\n";
         }
     }
 };

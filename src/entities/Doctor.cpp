@@ -1,4 +1,9 @@
+#ifndef DOCTOR_CPP
+#define DOCTOR_CPP
 #include <iostream>
+#include <vector>
+
+class Patient;
 
 // Doctor also has-a Patient. 
 class Doctor {
@@ -7,7 +12,8 @@ class Doctor {
     std::string name;
     std::string role;
     std::string hospitalAdmitted;
-    // Add Vector of Patients (Doctor treat multiple Patients)
+    int hospitalId; 
+    std::vector<Patient*> patients; 
 
     public: 
     Doctor(std::string name, std::string role)
@@ -15,7 +21,7 @@ class Doctor {
         , role{ role }
     {}
 
-    // Getter methods
+
     int getId() const {
         return id;
     }
@@ -28,9 +34,15 @@ class Doctor {
         return role;
     }    
 
-    // Setter methods
     void setId(int id) {
         this->id = id;
     }
 
+    void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
+    int getHospitalId() const { return hospitalId; }
+    void addPatient(Patient* p) { patients.push_back(p); }
+    std::vector<Patient*> getPatients() const { return patients; }
+
 };
+
+#endif

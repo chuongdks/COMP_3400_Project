@@ -1,48 +1,214 @@
 #include <iostream>
+#include <string>
 #include "HospitalManager.cpp"
 #include "./entities/Pharmacy.cpp"
 #include "./database/Database.cpp"
+
+using namespace std;
+
+void printMenu() {
+    cout << "\nHospital Management System Menu\n";
+    cout << "1. Add a new hospital\n";
+    cout << "2. Admit a patient\n";
+    cout << "3. Assign a doctor\n";
+    cout << "4. Assign a nurse\n";
+    cout << "5. Display all hospitals\n";
+    cout << "6. Discharge a patient\n";
+    cout << "7. Display all doctors\n"; 
+    cout << "8. Display all nurses\n";  
+    cout << "9. Exit\n";              
+    cout << "Enter your choice (1-9): "; 
+}
 
 int main() {
     // Create and Initialize the Database and table 
     const char* dbPath = "../db/hospital.db";
     Database db(dbPath);         // Create Database instance
     db.createTable();
-
-    // Hospital manager object
     HospitalManager manager(db); // Pass db to HospitalManager
 
-    // Add some hospitals
-    manager.addHospital("City Hospital 1");
-    manager.addHospital("City Hospital 2");
+    int choice;
+    string input;
 
-    // Create Patients, Doctor and NUrses
-    Patient* patient1 = new Patient("John Doe", "Flu", 50);
-    Patient* patient2 = new Patient("Jane Smith", "Covid-19", 100);
+    while (true) {
+        printMenu();
+        getline(cin, input); 
 
-    Doctor* doctor1 = new Doctor("Dr. Smith", "Covid-19");
-    Doctor* doctor2 = new Doctor("Dr. Sin", "Proctologists");
+        try {
+            choice = stoi(input);
+        } catch (...) {
+            choice = 0; 
+        }
 
-    Nurse* nurse1 = new Nurse("Nurse Joy");
-    Nurse* nurse2 = new Nurse("Nurse Bubble Head");
+        switch (choice) {
+            case 1: { // Add a new hospital
+                string name;
+                cout << "Enter hospital name: ";
+                getline(cin, name);
+                if (!name.empty()) {
+                    manager.addHospital(name);
+                } else {
+                    cout << "Error: Hospital name cannot be empty.\n";
+                }
+                break;
+            }
+            case 2: { // Admit a patient
+                int hospital_id, cost;
+                string name, disease, temp;
 
-    // Admit patients, doctors and nurse to a hospital
-    manager.admitPatientToHospital(1, patient1);
-    manager.admitPatientToHospital(1, patient2);
-    manager.assignDoctorToHospital(1, doctor1);
-    manager.assignDoctorToHospital(1, doctor2);
-    manager.assignNurseToHospital(1, nurse1);
-    manager.assignNurseToHospital(1, nurse1);
+                cout << "Enter hospital ID: ";
+                getline(cin, temp);
+                try {
+                    hospital_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid hospital ID.\n";
+                    break;
+                }
 
-    // Display hospitals and their patients
-    manager.displayAllHospitals();
+                cout << "Enter patient name: ";
+                getline(cin, name);
+                if (name.empty()) {
+                    cout << "Error: Patient name cannot be empty.\n";
+                    break;
+                }
 
-    // // Remove a patient
-    // manager.dischargePatientFromHospital(1, 1);
+                cout << "Enter disease: ";
+                getline(cin, disease);
+                if (disease.empty()) {
+                    cout << "Error: Disease cannot be empty.\n";
+                    break;
+                }
 
-    // // Remove Hospital
-    // manager.removeHospital(1);
+                cout << "Enter cost per day: ";
+                getline(cin, temp);
+                try {
+                    cost = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid cost.\n";
+                    break;
+                }
 
-    return 0;
+                Patient* patient = new Patient(name, disease, cost);
+                manager.admitPatientToHospital(hospital_id, patient);
+                delete patient; 
+                break;
+            }
+            case 3: { // Assign a doctor
+                int hospital_id;
+                string name, role, temp;
+
+                cout << "Enter hospital ID: ";
+                getline(cin, temp);
+                try {
+                    hospital_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid hospital ID.\n";
+                    break;
+                }
+
+                cout << "Enter doctor name: ";
+                getline(cin, name);
+                if (name.empty()) {
+                    cout << "Error: Doctor name cannot be empty.\n";
+                    break;
+                }
+
+                cout << "Enter doctor role (Primary? Y/N): ";
+                getline(cin, role);
+                if (role.empty()) {
+                    cout << "Error: Role cannot be empty.\n";
+                    break;
+                }
+
+                Doctor* doctor = new Doctor(name, role);
+                manager.assignDoctorToHospital(hospital_id, doctor);
+                delete doctor; 
+                break;
+            }
+            case 4: { // Assign a nurse
+                int hospital_id;
+                string name, temp;
+
+                cout << "Enter hospital ID: ";
+                getline(cin, temp);
+                try {
+                    hospital_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid hospital ID.\n";
+                    break;
+                }
+
+                cout << "Enter nurse name: ";
+                getline(cin, name);
+                if (name.empty()) {
+                    cout << "Error: Nurse name cannot be empty.\n";
+                    break;
+                }
+
+                Nurse* nurse = new Nurse(name);
+                manager.assignNurseToHospital(hospital_id, nurse);
+                delete nurse; 
+                break;
+            }
+            case 5: { // Display all hospitals
+                manager.displayAllHospitals();
+                for (Hospital* h : manager.getHospitals()) {
+                    h->updatePatientDays();
+                }
+                break;
+            }
+            case 6: { // Discharge a patient
+                int hospital_id, patient_id, doctor_id;
+                string temp;
+
+                cout << "Enter hospital ID: ";
+                getline(cin, temp);
+                try {
+                    hospital_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid hospital ID.\n";
+                    break;
+                }
+
+                cout << "Enter patient ID: ";
+                getline(cin, temp);
+                try {
+                    patient_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid patient ID.\n";
+                    break;
+                }
+
+                cout << "Enter doctor ID to authorize: ";
+                getline(cin, temp);
+                try {
+                    doctor_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid doctor ID.\n";
+                    break;
+                }
+
+                manager.dischargePatientFromHospital(hospital_id, patient_id, doctor_id);
+                break;
+            }
+            case 7: { // Display all doctors 
+                manager.displayAllDoctors();
+                break;
+            }
+            case 8: { // Display all nurses 
+                manager.displayAllNurses();
+                break;
+            }
+            case 9: { // Exit
+                cout << "Exiting.\n";
+                return 0;
+            }
+            default: {
+                cout << "Invalid choice. Please enter a number between 1 to 9.\n";
+                break;
+            }
+        }
+    }
+
+    return 0; 
 }
-

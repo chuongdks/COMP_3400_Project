@@ -1,18 +1,23 @@
+#ifndef NURSE_CPP
+#define NURSE_CPP
 #include <iostream>
+#include <vector>
+
+class Patient;
 
 class Nurse {
     private:
     int id;
     std::string name;
     std::string hospitalAdmitted;
-    // Add Vector of Patients (Nurse treat max of 2 Patients)
+    int hospitalId; 
+    std::vector<Patient*> patients; 
 
     public:
     Nurse(std::string name)
         : name{ name }
     {}
 
-    // Getter methods
     int getId() const {
         return id;
     }
@@ -21,8 +26,20 @@ class Nurse {
         return name;
     }    
 
-    // Setter methods
     void setId(int id) {
         this->id = id;
     }
+
+    void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
+    int getHospitalId() const { return hospitalId; }
+    bool addPatient(Patient* p) {
+        if (patients.size() < 2) {
+            patients.push_back(p);
+            return true;
+        }
+        return false;
+    }
+    std::vector<Patient*> getPatients() const { return patients; }
 };
+
+#endif
