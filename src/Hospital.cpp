@@ -140,8 +140,8 @@ class Hospital {
         // Remove patient from hospital using patient ID
         void dischargePatient(int patientID) {
             for (auto patient = patients.begin(); patient != patients.end(); ++patient) {
-                // Content of the patient iterator is a pointer to Patient object
-                if ((*patient)->getId() == patientID) {
+                // iterator (patient) is a pointer to a Patient* (a pointer to a pointer) (remember default iterator is a pointer points to the Patient object)
+                if ((*patient)->getId() == patientID) {             // Content of this patient iterator is a pointer to Patient object
                     std::cout << "Patient " << (*patient)->getName() << " is dischared from Hospital " << name << std::endl;
                     
                     // Database Delete query
