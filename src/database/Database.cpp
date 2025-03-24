@@ -38,6 +38,11 @@ class Database {
         }
     }
 
+    // Get the database pointer for direct access
+    sqlite3* getDbPointer() const {
+        return db;
+    }
+
     // Create database (No need for this anymore since we have db as an object and it close on destructor)
     int createDB() {
         sqlite3* DB;
