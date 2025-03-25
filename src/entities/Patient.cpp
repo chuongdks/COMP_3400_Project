@@ -28,10 +28,7 @@ class Patient {
         , disease{ disease }
         , costPerDay{ costPerDay }
     {}
-
-    /* Rule of Five */
     
-
     // Getter methods
     int getId() const { return id; }
     std::string getName() { return name; }
@@ -49,11 +46,9 @@ class Patient {
     void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
     void addDoctor(Doctor* d) { doctors.push_back(d); }
     void setPrimaryNurse(Nurse* n) { primaryNurse = n; }
-    
     void setStatus(Status s) { status = s; }
     Status getStatus() const { return status; }
     void incrementDays() { daysInHospital++; }
-
 };
 
 #endif

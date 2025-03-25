@@ -16,32 +16,27 @@ class Doctor {
     std::vector<Patient*> patients; 
 
     public: 
+    // Constructor
     Doctor(std::string name, std::string role)
         : name{ name }
         , role{ role }
     {}
 
-
-    int getId() const {
-        return id;
-    }
-
-    std::string getName() {
-        return name;
-    }    
-
-    std::string getRole() {
-        return role;
-    }    
-
-    void setId(int id) {
-        this->id = id;
-    }
-
-    void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
+    // Getter methods
+    int getId() const { return id; }
+    std::string getName() { return name; }    
+    std::string getRole() { return role; }    
     int getHospitalId() const { return hospitalId; }
-    void addPatient(Patient* p) { patients.push_back(p); }
     std::vector<Patient*> getPatients() const { return patients; }
+
+    // Setter methods
+    void setId(int id) { this->id = id; }
+    void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
+    
+    /* Other methods */
+    // add patients for Doctor
+    void addPatient(Patient* p) { patients.push_back(p); }
+    
 
 };
 

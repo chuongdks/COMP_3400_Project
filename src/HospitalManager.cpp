@@ -97,6 +97,7 @@ class HospitalManager {
         std::cout << "Hospital with ID " << hospitalID << " not found.\n";
     }
 
+    // Remove Patient from a Specific Hospital
     void dischargePatientFromHospital(int hospitalID, int patientID, int doctorID) {
         for (Hospital* hospital : hospitals) {
             if (hospital->getId() == hospitalID) {

@@ -115,10 +115,11 @@ class Hospital {
         }
 
         /* Methods for Hospital */
+    /*Patients related methods*/
         // Add Patient to Hospital
         void admitPatient(Patient* p) {
             // check size of Patient Vector
-            if (patients.size() < 3) {
+            if (patients.size() < MAX_PATIENT_CAPACITY) {
                 Patient* newPatient = new Patient(*p);
                 patients.push_back(newPatient);
                 std::string sql = "INSERT INTO Patient (name, disease, bill, status) VALUES ('"
@@ -136,6 +137,7 @@ class Hospital {
             }
         }
 
+        // Discharge Patient from Hospital
         void dischargePatient(int patientID, int doctorID) {
             for (Doctor* d : doctors) {
                 if (d->getId() == doctorID) {
@@ -156,10 +158,21 @@ class Hospital {
             std::cout << "Doctor not found or not authorized.\n";
         }
 
+        // Change Patient admitted days by hand
+        void updatePatientDays() {
+            for (Patient* p : patients) {
+                p->incrementDays();
+                std::string sql = "UPDATE Patient SET daysInHospital = " + std::to_string(p->getdaysInHospital()) + 
+                                  " WHERE id = " + std::to_string(p->getId()) + ";";
+                db.executeSQL(sql);
+            }
+        }
+
+    /*Doctor related methods*/
         // Add Doctor to Hospital
         void assignDoctor(Doctor* d) {
             // check size of Doctors Vector
-            if (doctors.size() < 3) {
+            if (doctors.size() < MAX_DOCTOR_CAPACITY) {
                 Doctor* newDoctor = new Doctor(*d);
                 doctors.push_back(newDoctor);
                 std::string sql = "INSERT INTO Doctor (name, role) VALUES ('"
@@ -196,10 +209,11 @@ class Hospital {
             std::cout << "Doctor is not found. Please check the Doctor ID again.\n";
         }
 
+    /*Nurses related methods*/
         // Add nurse to Hospital
         void assignNurse(Nurse* n) {
             // check size of Doctors Vector
-            if (nurses.size() < 5) {
+            if (nurses.size() < MAX_NURSE_CAPACITY) {
                 Nurse* newNurse = new Nurse(*n);
                 nurses.push_back(newNurse);
                 std::string sql = "INSERT INTO Nurse (name) VALUES ('" + newNurse->getName() + "');";
@@ -234,6 +248,7 @@ class Hospital {
             std::cout << "Nurse is not found. Please check the Nurse's ID again.\n";
         }
 
+    /*Other methods here*/
         // Display the info of current Hospital
         void displayHospitalInfo() {
             std::cout << "Hospital id: " << id << std::endl;
@@ -241,14 +256,5 @@ class Hospital {
             std::cout << "Number of patients: " << patients.size() << std::endl;
             std::cout << "Number of doctors: " << doctors.size() << std::endl;
             std::cout << "Number of nurses: " << nurses.size() << std::endl;
-        }
-
-        void updatePatientDays() {
-            for (Patient* p : patients) {
-                p->incrementDays();
-                std::string sql = "UPDATE Patient SET daysInHospital = " + std::to_string(p->getdaysInHospital()) + 
-                                  " WHERE id = " + std::to_string(p->getId()) + ";";
-                db.executeSQL(sql);
-            }
         }
 };
