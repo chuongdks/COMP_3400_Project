@@ -293,7 +293,7 @@ class Hospital {
 
         /*Patient, Doctors and Nurse Relationship methods*/
         // Assign Doctor to Patients and Vice Versa in db
-        void assignDoctorToPatient(int doctorID, int patientID, bool isPrimary) {
+        void assignDoctorToPatient_Hospital(int doctorID, int patientID, bool isPrimary) {
             // Check if doctor and patient exist
             Doctor* doctor = findDoctorById(doctorID);
             Patient* patient = findPatientById(patientID);
@@ -306,6 +306,7 @@ class Hospital {
                 std::cout << "Error: Patient with ID " << patientID << " not found.\n";
                 return;
             }
+
             // Update patient and doctor objects
             patient->addDoctorToPatient(doctor);
             doctor->addPatientToDoctor(patient);
@@ -322,6 +323,36 @@ class Hospital {
             if (isPrimary) {
                 std::cout << " as Primary Doctor";
             }
+            std::cout << std::endl;
+        }
+
+        // Assign Nurse to Patients and Vice Versa in db
+        void assignNurseToPatient_Hospital(int nurseID, int patientID) {
+            // Check if doctor and patient exist
+            Nurse* nurse = findNurseById(nurseID);
+            Patient* patient = findPatientById(patientID);
+
+            if (!nurse) {
+                std::cout << "Error: Nurse with ID " << nurseID << " not found.\n";
+                return;
+            }
+            if (!patient) {
+                std::cout << "Error: Patient with ID " << patientID << " not found.\n";
+                return;
+            }
+
+            // Update patient and doctor objects
+            patient->addNurseToPatient(nurse);
+            nurse->addPatientToNurse(patient);
+
+            // Execute the query
+            std::string sql = "INSERT INTO Nurse_Patient (doctor_id, patient_id) VALUES ("
+                            + std::to_string(nurseID) + ", "
+                            + std::to_string(patientID) + ");";
+            db.executeSQL(sql);
+        
+            // Print some info
+            std::cout << "Nurse ID " << nurseID << " assigned to Patient ID " << patientID;
             std::cout << std::endl;
         }
 };

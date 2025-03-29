@@ -184,11 +184,36 @@ class HospitalManager {
         }
     
         // Assign doctor to patient
-        hospital->assignDoctorToPatient(doctorId, patientId, isPrimary);
-        doctor->addPatientToDoctor(patient);
-        patient->addDoctorToPatient(doctor);
-    
+        hospital->assignDoctorToPatient_Hospital(doctorId, patientId, isPrimary);
         cout << "Doctor assigned to patient successfully.\n";
+    }
+
+    // Assign Nurse to Patients
+    void assignNurseToPatient(int hospitalId, int nurseId, int patientId) {
+        // Find the hospital
+        Hospital* hospital = getHospitalById(hospitalId);
+        if (!hospital) {
+            cout << "Error: Hospital not found.\n";
+            return;
+        }
+    
+        // Find the nurse
+        Nurse* nurse = hospital->findNurseById(nurseId);
+        if (!nurse) {
+            std::cout << "Error: Nurse with ID " << nurseId << " not found.\n";
+            return;
+        }
+    
+        // Find the patient
+        Patient* patient = hospital->findPatientById(patientId);
+        if (!patient) {
+            cout << "Error: Patient not found in hospital.\n";
+            return;
+        }
+    
+        // Assign doctor to patient
+        hospital->assignNurseToPatient_Hospital(nurseId, patientId);
+        cout << "Nurse assigned to patient successfully.\n";
     }
     
 /*Display method*/

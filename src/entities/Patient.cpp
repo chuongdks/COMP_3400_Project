@@ -1,6 +1,6 @@
 #include "Patient.h"
 #include "Doctor.h"
-#include "./Nurse.cpp"
+#include "Nurse.h"
 
 // Default constructor
 Patient::Patient(std::string name, std::string disease, int costPerDay)
@@ -18,15 +18,14 @@ int Patient::getCostPerDay() const { return costPerDay; }
 int Patient::getDaysInHospital() const { return daysInHospital; }
 int Patient::getBill() const { return daysInHospital * costPerDay; }
 int Patient::getHospitalId() const { return hospitalId; }
-Nurse* Patient::getPrimaryNurse() const { return primaryNurse; }
 std::vector<Doctor*> Patient::getDoctors() const { return doctors; }
+std::vector<Nurse*> Patient::getNurses() const { return nurses; }
 Patient::Status Patient::getStatus() const { return status; }
 
 // Setter methods
 void Patient::setId(int id) { this->id = id; }
 void Patient::setDaysInHospital(int days) { this->daysInHospital = days; }
 void Patient::setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
-void Patient::setPrimaryNurse(Nurse* n) { primaryNurse = n; }
 void Patient::setStatus(Status s) { status = s; }
 void Patient::incrementDays() { daysInHospital++; }
 
@@ -51,5 +50,18 @@ void Patient::displayDoctors() {
         if (doctor != primaryDoctor) {
             std::cout << "- " << doctor->getName() << "\n";
         }
+    }
+}
+
+// Add nurses to Patient
+void Patient::addNurseToPatient(Nurse* nurse) {
+    nurses.push_back(nurse);
+}
+
+// Display all nurses treating this patient
+void Patient::displayNurses() {
+    std::cout << "Patient: " << this->name << " is being treated by:\n";
+    for (auto nurse : nurses) {
+        std::cout << "- " << nurse->getName() << "\n";
     }
 }

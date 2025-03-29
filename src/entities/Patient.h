@@ -22,7 +22,7 @@ private:
     
     Doctor* primaryDoctor;
     std::vector<Doctor*> doctors;
-    Nurse* primaryNurse;
+    std::vector<Nurse*> nurses;
     Status status;
 
 public:
@@ -37,15 +37,14 @@ public:
     int getDaysInHospital() const;
     int getBill() const;
     int getHospitalId() const;
-    Nurse* getPrimaryNurse() const;
     std::vector<Doctor*> getDoctors() const;
+    std::vector<Nurse*> getNurses() const;
     Status getStatus() const;
 
     // Setter methods
     void setId(int id);
     void setDaysInHospital(int days);
     void setHospitalId(int hid);
-    void setPrimaryNurse(Nurse* n);
     void setStatus(Status s);
     void incrementDays();
 
@@ -53,6 +52,8 @@ public:
     void setPrimaryDoctor(Doctor* doctor);
     void addDoctorToPatient(Doctor* doctor);
     void displayDoctors();
+    void addNurseToPatient(Nurse* nurse);
+    void displayNurses();
 };
 
 #endif

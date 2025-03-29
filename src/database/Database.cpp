@@ -97,10 +97,7 @@ class Database {
                 patient_id INTEGER,
                 FOREIGN KEY(nurse_id) REFERENCES Nurse(id) ON DELETE CASCADE,
                 FOREIGN KEY(patient_id) REFERENCES Patient(id) ON DELETE CASCADE,
-                PRIMARY KEY(nurse_id, patient_id),
-                CONSTRAINT nurse_patient_limit CHECK (
-                    (SELECT COUNT(*) FROM Nurse_Patient np WHERE np.nurse_id = nurse_id) <= 2
-                )
+                PRIMARY KEY(nurse_id, patient_id)
             );
         )";
 

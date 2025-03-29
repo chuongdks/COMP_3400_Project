@@ -1,45 +1,33 @@
-#ifndef NURSE_CPP
-#define NURSE_CPP
-#include <iostream>
-#include <vector>
+#include "Nurse.h"
+#include "Patient.h"
 
-class Patient;
+// Constructor
+Nurse::Nurse(std::string name)
+    : name{ name }
+{}
 
-class Nurse {
-    private:
-    int id;
-    std::string name;
-    std::string hospitalAdmitted;
-    int hospitalId; 
-    
-    std::vector<Patient*> patients; 
+// Getter methods
+int Nurse::getId() const { return id; }
+std::string Nurse::getName() const { return name; }    
+int Nurse::getHospitalId() const { return hospitalId; }
+std::vector<Patient*> Nurse::getPatients() const { return patients; }
 
-    public:
-    // Constructor
-    Nurse(std::string name)
-        : name{ name }
-    {}
+// Setter methods
+void Nurse::setId(int id) { this->id = id; }
+void Nurse::setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
 
-    // Getter methods
-    int getId() const { return id; }
-    std::string getName() { return name; }    
-    int getHospitalId() const { return hospitalId; }
-    std::vector<Patient*> getPatients() const { return patients; }
-
-    // Setter methods
-    void setId(int id) { this->id = id; }
-    void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
-    
-    /* Other methods */ 
-    // Add patient for a Nurse
-    bool addPatient(Patient* p) {
-        if (patients.size() < 2) {
-            patients.push_back(p);
-            return true;
-        }
-        return false;
+/* Other methods */ 
+// add patients to nurse
+void Nurse::addPatientToNurse(Patient* patient) { 
+    if (patients.size() < 2) {
+        patients.push_back(patient); 
     }
-    
-};
+}
 
-#endif
+// Display patients treated by this nurse
+void Nurse::displayPatients() {
+    std::cout << "Doctor: " << this->name << " is treating:\n";
+    for (auto patient : patients) {
+        std::cout << "- " << patient->getName() << "\n";
+    }
+}

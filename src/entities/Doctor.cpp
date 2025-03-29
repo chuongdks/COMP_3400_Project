@@ -1,7 +1,6 @@
 #include "Doctor.h"
 #include "Patient.h"
 
-
 // Default Constructor
 Doctor::Doctor(std::string name, std::string role)
     : name{ name }
