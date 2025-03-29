@@ -147,6 +147,7 @@ public class HospitalManagementGUI extends JFrame {
         doctorModel.addColumn("ID");
         doctorModel.addColumn("Name");
         doctorModel.addColumn("Role");
+        doctorModel.addColumn("Patients");
         
         // Create table
         doctorTable = new JTable(doctorModel);
@@ -156,16 +157,22 @@ public class HospitalManagementGUI extends JFrame {
         JPanel buttonPanel = new JPanel();
         JButton addButton = new JButton("Add Doctor");
         JButton assignButton = new JButton("Assign to Hospital");
+        JButton assignPatientButton = new JButton("Assign Patient");
+        JButton viewPatientsButton = new JButton("View Patients");
         JButton refreshButton = new JButton("Refresh");
         
         // Add action listeners
         addButton.addActionListener(e -> addDoctor());
         assignButton.addActionListener(e -> assignDoctor());
+        assignPatientButton.addActionListener(e -> assignDoctorToPatient());
+        viewPatientsButton.addActionListener(e -> viewDoctorPatients());
         refreshButton.addActionListener(e -> loadDoctors());
         
         // Add buttons to panel
         buttonPanel.add(addButton);
         buttonPanel.add(assignButton);
+        buttonPanel.add(assignPatientButton);
+        buttonPanel.add(viewPatientsButton);
         buttonPanel.add(refreshButton);
         
         // Add components to doctor panel
@@ -433,7 +440,10 @@ public class HospitalManagementGUI extends JFrame {
             doctorModel.setRowCount(0);
             
             // Prepare and execute query
-            String query = "SELECT id, name, role FROM Doctor";
+            String query = "SELECT d.id, d.name, d.role, COUNT(dp.patient_id) as patient_count " +
+                         "FROM Doctor d " +
+                         "LEFT JOIN Doctor_Patient dp ON d.id = dp.doctor_id " +
+                         "GROUP BY d.id";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             
@@ -442,7 +452,8 @@ public class HospitalManagementGUI extends JFrame {
                 Object[] row = {
                     rs.getInt("id"),
                     rs.getString("name"),
-                    rs.getString("role")
+                    rs.getString("role"),
+                    rs.getInt("patient_count")
                 };
                 doctorModel.addRow(row);
             }
@@ -501,6 +512,148 @@ public class HospitalManagementGUI extends JFrame {
         // Implementation of assigning doctor to hospital
         // This would need additional database tables to track the relationship
         JOptionPane.showMessageDialog(this, "Assign Doctor functionality not fully implemented yet.");
+    }
+
+    private void assignDoctorToPatient() {
+        // Get selected doctor
+        int selectedRow = doctorTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a doctor first.");
+            return;
+        }
+        
+        int doctorId = (int)doctorModel.getValueAt(selectedRow, 0);
+        
+        // Get list of patients for dropdown
+        Object[] patients = getPatientList();
+        if (patients.length == 0) {
+            JOptionPane.showMessageDialog(this, "No patients available.");
+            return;
+        }
+        
+        // Create form components
+        JComboBox<Object> patientCombo = new JComboBox<>(patients);
+        JCheckBox primaryCheckBox = new JCheckBox("Primary Doctor");
+        
+        // Create panel for form
+        JPanel panel = new JPanel(new GridLayout(0, 2));
+        panel.add(new JLabel("Patient:"));
+        panel.add(patientCombo);
+        panel.add(new JLabel(""));
+        panel.add(primaryCheckBox);
+        
+        // Show dialog
+        int result = JOptionPane.showConfirmDialog(this, panel, "Assign Patient to Doctor", 
+                                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+        if (result == JOptionPane.OK_OPTION) {
+            String selectedPatient = patientCombo.getSelectedItem().toString();
+            int patientId = Integer.parseInt(selectedPatient.split(":")[0].trim());
+            boolean isPrimary = primaryCheckBox.isSelected();
+            
+            try {
+                String query = "INSERT INTO Doctor_Patient (doctor_id, patient_id, is_primary) VALUES (?, ?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, doctorId);
+                pstmt.setInt(2, patientId);
+                pstmt.setInt(3, isPrimary ? 1 : 0);
+                pstmt.executeUpdate();
+                pstmt.close();
+                
+                JOptionPane.showMessageDialog(this, "Patient assigned to doctor successfully!");
+                loadDoctors();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error assigning patient: " + e.getMessage(), 
+                                             "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void viewDoctorPatients() {
+        // Get selected doctor
+        int selectedRow = doctorTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a doctor first.");
+            return;
+        }
+        
+        int doctorId = (int)doctorModel.getValueAt(selectedRow, 0);
+        String doctorName = (String)doctorModel.getValueAt(selectedRow, 1);
+        
+        try {
+            // Create a new dialog to show patients
+            JDialog dialog = new JDialog(this, "Patients of " + doctorName, true);
+            dialog.setSize(400, 300);
+            dialog.setLocationRelativeTo(this);
+            
+            // Create table model for patients
+            DefaultTableModel patientModel = new DefaultTableModel();
+            patientModel.addColumn("ID");
+            patientModel.addColumn("Name");
+            patientModel.addColumn("Disease");
+            patientModel.addColumn("Primary");
+            
+            // Create and populate table
+            JTable patientTable = new JTable(patientModel);
+            JScrollPane scrollPane = new JScrollPane(patientTable);
+            
+            // Query to get patients
+            String query = "SELECT p.id, p.name, p.disease, dp.is_primary " +
+                         "FROM Patient p " +
+                         "JOIN Doctor_Patient dp ON p.id = dp.patient_id " +
+                         "WHERE dp.doctor_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("disease"),
+                    rs.getInt("is_primary") == 1 ? "Yes" : "No"
+                };
+                patientModel.addRow(row);
+            }
+            
+            // Add close button
+            JButton closeButton = new JButton("Close");
+            closeButton.addActionListener(e -> dialog.dispose());
+            
+            // Add components to dialog
+            dialog.add(scrollPane, BorderLayout.CENTER);
+            dialog.add(closeButton, BorderLayout.SOUTH);
+            
+            dialog.setVisible(true);
+            
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error loading patients: " + e.getMessage(), 
+                                         "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private Object[] getPatientList() {
+        try {
+            String query = "SELECT id, name FROM Patient";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            java.util.List<String> patients = new java.util.ArrayList<>();
+            while (rs.next()) {
+                patients.add(rs.getInt("id") + ": " + rs.getString("name"));
+            }
+            
+            rs.close();
+            stmt.close();
+            
+            return patients.toArray();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error loading patients: " + e.getMessage(), 
+                                         "Error", JOptionPane.ERROR_MESSAGE);
+            return new Object[0];
+        }
     }
 
     // Nurse methods
