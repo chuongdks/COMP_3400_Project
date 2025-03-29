@@ -1,57 +1,34 @@
-#ifndef DOCTOR_CPP
-#define DOCTOR_CPP
-#include <iostream>
-#include <vector>
-#include "../database/Database.cpp"
-#include "./Patient.cpp"
+#include "Doctor.h"
+#include "Patient.h"
 
-class Patient;
 
-// Doctor also has-a Patient. 
-class Doctor {
-    private:
-    int id;
-    std::string name;
-    std::string role;
-    std::string hospitalAdmitted;
-    int hospitalId; 
+// Default Constructor
+Doctor::Doctor(std::string name, std::string role)
+    : name{ name }
+    , role{ role }
+{}
 
-    std::vector<Patient*> patients; // Doctor take cares of many patients
-    Database& db; 
+// Getter methods
+int Doctor::getId() const { return id; }
+std::string Doctor::getName() const { return name; }    
+std::string Doctor::getRole() const { return role; }    
+int Doctor::getHospitalId() const { return hospitalId; }
+std::vector<Patient*> Doctor::getPatients() const { return patients; }
 
-    public: 
-    // Constructor
-    Doctor(std::string name, std::string role, Database& database)
-        : name{ name }
-        , role{ role }
-        , db{ database }
-    {}
-
-    // Getter methods
-    int getId() const { return id; }
-    std::string getName() { return name; }    
-    std::string getRole() { return role; }    
-    int getHospitalId() const { return hospitalId; }
-    std::vector<Patient*> getPatients() const { return patients; }
-
-    // Setter methods
-    void setId(int id) { this->id = id; }
-    void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
+// Setter methods
+void Doctor::setId(int id) { this->id = id; }
+void Doctor::setHospitalId(int hid) { hospitalId = hid;}
     
-    /* Other methods */
-    // add patients to Doctor
-    void addPatientToDoctor(Patient* patient, bool isPrimary) { 
-        patients.push_back(patient); 
-    }
+/* Other methods */
+// add patients to Doctor
+void Doctor::addPatientToDoctor(Patient* patient) { 
+    patients.push_back(patient); 
+}
 
-    // Display patients treated by this doctor
-    void displayPatients() {
-        std::cout << "Doctor: " << this->name << " is treating: \n";
-        for (auto patient : patients) {
-            std::cout << "- " << patient->getName() << "\n";
-        }
+// Display patients treated by this doctor
+void Doctor::displayPatients() {
+    std::cout << "Doctor: " << this->name << " is treating:\n";
+    for (auto patient : patients) {
+        std::cout << "- " << patient->getName() << "\n";
     }
-    
-};
-
-#endif
+}

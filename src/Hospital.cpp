@@ -164,10 +164,20 @@ class Hospital {
         void updatePatientDays() {
             for (Patient* p : patients) {
                 p->incrementDays();
-                std::string sql = "UPDATE Patient SET daysInHospital = " + std::to_string(p->getdaysInHospital()) + 
+                std::string sql = "UPDATE Patient SET daysInHospital = " + std::to_string(p->getDaysInHospital()) + 
                                   " WHERE id = " + std::to_string(p->getId()) + ";";
                 db.executeSQL(sql);
             }
+        }
+
+        // Helper method to find a Patient by ID
+        Patient* findPatientById(int patientID) {
+            for (Patient* patient : patients) {
+                if (patient->getId() == patientID) {
+                    return patient;
+                }
+            }
+            return nullptr;
         }
 
     /*Doctor related methods*/
@@ -211,6 +221,16 @@ class Hospital {
             std::cout << "Doctor is not found. Please check the Doctor ID again.\n";
         }
 
+        // Helper method to find a Doctor by ID
+        Doctor* findDoctorById(int doctorID) {
+            for (Doctor* doctor : doctors) {
+                if (doctor->getId() == doctorID) {
+                    return doctor;
+                }
+            }
+            return nullptr;
+        }
+
     /*Nurses related methods*/
         // Add nurse to Hospital
         void assignNurse(Nurse* n) {
@@ -250,6 +270,16 @@ class Hospital {
             std::cout << "Nurse is not found. Please check the Nurse's ID again.\n";
         }
 
+        // Helper method to find a Nurse by ID
+        Nurse* findNurseById(int nurseID) {
+            for (Nurse* nurse : nurses) {
+                if (nurse->getId() == nurseID) {
+                    return nurse;
+                }
+            }
+            return nullptr;
+        }
+
     /*Other methods here*/
     
         // Display the info of current Hospital
@@ -264,12 +294,30 @@ class Hospital {
         /*Patient, Doctors and Nurse Relationship methods*/
         // Assign Doctor to Patients and Vice Versa in db
         void assignDoctorToPatient(int doctorID, int patientID, bool isPrimary) {
+            // Check if doctor and patient exist
+            Doctor* doctor = findDoctorById(doctorID);
+            Patient* patient = findPatientById(patientID);
+
+            if (!doctor) {
+                std::cout << "Error: Doctor with ID " << doctorID << " not found.\n";
+                return;
+            }
+            if (!patient) {
+                std::cout << "Error: Patient with ID " << patientID << " not found.\n";
+                return;
+            }
+            // Update patient and doctor objects
+            patient->addDoctorToPatient(doctor);
+            doctor->addPatientToDoctor(patient);
+
+            // Execute the query
             std::string sql = "INSERT INTO Doctor_Patient (doctor_id, patient_id, is_primary) VALUES ("
                             + std::to_string(doctorID) + ", "
                             + std::to_string(patientID) + ", "
                             + std::to_string(isPrimary) + ");";
             db.executeSQL(sql);
         
+            // Print some info
             std::cout << "Doctor ID " << doctorID << " assigned to Patient ID " << patientID;
             if (isPrimary) {
                 std::cout << " as Primary Doctor";

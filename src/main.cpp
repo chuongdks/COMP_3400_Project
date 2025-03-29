@@ -13,12 +13,14 @@ void printMenu() {
     cout << "2. Admit a patient\n";
     cout << "3. Assign a doctor\n";
     cout << "4. Assign a nurse\n";
-    cout << "5. Display all hospitals\n";
-    cout << "6. Discharge a patient\n";
-    cout << "7. Display all doctors\n"; 
-    cout << "8. Display all nurses\n";  
-    cout << "9. Pharmacy Management\n";
-    cout << "10. Exit\n";              
+    cout << "5. Assign a doctor to a patient and vice versa\n";  
+    cout << "6. Display all hospitals\n";
+    cout << "7. Discharge a patient\n";
+    cout << "8. Display all patients\n"; 
+    cout << "9. Display all doctors\n"; 
+    cout << "10. Display all nurses\n";  
+    cout << "11. Pharmacy Management\n";
+    cout << "12. Exit\n";              
     cout << "Enter your choice (1-10): "; 
 }
 
@@ -139,7 +141,7 @@ int main() {
                     break;
                 }
 
-                Doctor* doctor = new Doctor(name, role, db);
+                Doctor* doctor = new Doctor(name, role);
                 manager.assignDoctorToHospital(hospital_id, doctor);
                 delete doctor; 
                 break;
@@ -172,8 +174,49 @@ int main() {
                 break;
             }
 
-            // Display all hospitals
+            // Assign a doctor to a patient and vice versa
             case 5: { 
+                int hospital_id, doctor_id, patient_id;
+                string temp, isPrimary;
+            
+                cout << "Enter hospital ID: ";
+                getline(cin, temp);
+                try {
+                    hospital_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid hospital ID.\n";
+                    break;
+                }
+            
+                cout << "Enter doctor ID: ";
+                getline(cin, temp);
+                try {
+                    doctor_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid doctor ID.\n";
+                    break;
+                }
+            
+                cout << "Enter patient ID: ";
+                getline(cin, temp);
+                try {
+                    patient_id = stoi(temp);
+                } catch (...) {
+                    cout << "Error: Invalid patient ID.\n";
+                    break;
+                }
+            
+                cout << "Is this a primary doctor? (Y/N): ";
+                getline(cin, isPrimary);
+                bool primaryDoctor = (isPrimary == "Y" || isPrimary == "y");
+            
+                // Assign the doctor to the patient
+                manager.assignDoctorToPatient(hospital_id, doctor_id, patient_id, primaryDoctor);
+                break;
+            }
+
+            // Display all hospitals
+            case 6: { 
                 manager.displayAllHospitals();
                 for (Hospital* h : manager.getHospitals()) {
                     h->updatePatientDays();
@@ -182,7 +225,7 @@ int main() {
             }
 
             // Discharge a patient
-            case 6: {
+            case 7: {
                 int hospital_id, patient_id, doctor_id;
                 string temp;
 
@@ -217,20 +260,26 @@ int main() {
                 break;
             }
 
+            // Display all patients in all Hospital
+            case 8: { 
+                manager.displayAllPatients();
+                break;
+            }
+
             // Display all doctors in all Hospital
-            case 7: { 
+            case 9: { 
                 manager.displayAllDoctors();
                 break;
             }
 
             // Display all nurses in all Hospital
-            case 8: { 
+            case 10: { 
                 manager.displayAllNurses();
                 break;
             }
 
             // Pharmacy Management
-            case 9: { 
+            case 11: { 
                 int pharmChoice;
                 string pharmInput;
                 
@@ -374,7 +423,7 @@ int main() {
                 main_menu:
                 break;
             }
-            case 10: { // Exit
+            case 12: { // Exit
                 cout << "Exiting.\n";
                 return 0;
             }

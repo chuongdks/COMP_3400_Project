@@ -159,7 +159,38 @@ class HospitalManager {
     std::vector<Hospital*>& getHospitals() {
         return hospitals;
     }
-
+/* Doctors-Patients Relationshiop */
+    // Assign Doctor to Patients
+    void assignDoctorToPatient(int hospitalId, int doctorId, int patientId, bool isPrimary) {
+        // Find the hospital
+        Hospital* hospital = getHospitalById(hospitalId);
+        if (!hospital) {
+            cout << "Error: Hospital not found.\n";
+            return;
+        }
+    
+        // Find the doctor
+        Doctor* doctor = hospital->findDoctorById(doctorId);
+        if (!doctor) {
+            cout << "Error: Doctor not found in hospital.\n";
+            return;
+        }
+    
+        // Find the patient
+        Patient* patient = hospital->findPatientById(patientId);
+        if (!patient) {
+            cout << "Error: Patient not found in hospital.\n";
+            return;
+        }
+    
+        // Assign doctor to patient
+        hospital->assignDoctorToPatient(doctorId, patientId, isPrimary);
+        doctor->addPatientToDoctor(patient);
+        patient->addDoctorToPatient(doctor);
+    
+        cout << "Doctor assigned to patient successfully.\n";
+    }
+    
 /*Display method*/
     // Display all hospitals
     void displayAllHospitals() {
@@ -168,6 +199,23 @@ class HospitalManager {
             std::cout << std::endl;
         }
     }
+
+    void displayAllPatients() {
+        std::cout << "\nAll Patients:\n";
+        bool found = false;
+        for (Hospital* hospital : hospitals) {
+            for (Patient* patient : hospital->patients) { 
+                std::cout << "Hospital ID: " << hospital->getId() 
+                          << ", Doctor ID: " << patient->getId() 
+                          << ", Name: " << patient->getName() << std::endl;
+                found = true;
+            }
+        }
+        if (!found) {
+            std::cout << "No patient is found.\n";
+        }
+    }
+
     void displayAllDoctors() {
         std::cout << "\nAll Doctors:\n";
         bool found = false;
@@ -181,7 +229,7 @@ class HospitalManager {
             }
         }
         if (!found) {
-            std::cout << "No doctors found.\n";
+            std::cout << "No doctor is found.\n";
         }
     }
 
@@ -197,7 +245,7 @@ class HospitalManager {
             }
         }
         if (!found) {
-            std::cout << "No nurses found.\n";
+            std::cout << "No nurse is found.\n";
         }
     }
 };
