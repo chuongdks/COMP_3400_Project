@@ -55,7 +55,8 @@ int main() {
         }
 
         switch (choice) {
-            case 1: { // Add a new hospital
+            // Add a new hospital
+            case 1: { 
                 string name;
                 cout << "Enter hospital name: ";
                 getline(cin, name);
@@ -66,7 +67,9 @@ int main() {
                 }
                 break;
             }
-            case 2: { // Admit a patient
+
+            // Admit a patient
+            case 2: { 
                 int hospital_id, cost;
                 string name, disease, temp;
 
@@ -107,7 +110,9 @@ int main() {
                 delete patient; 
                 break;
             }
-            case 3: { // Assign a doctor
+
+            // Assign a doctor
+            case 3: { 
                 int hospital_id;
                 string name, role, temp;
 
@@ -134,12 +139,14 @@ int main() {
                     break;
                 }
 
-                Doctor* doctor = new Doctor(name, role);
+                Doctor* doctor = new Doctor(name, role, db);
                 manager.assignDoctorToHospital(hospital_id, doctor);
                 delete doctor; 
                 break;
             }
-            case 4: { // Assign a nurse
+
+            // Assign a nurse
+            case 4: { 
                 int hospital_id;
                 string name, temp;
 
@@ -164,14 +171,18 @@ int main() {
                 delete nurse; 
                 break;
             }
-            case 5: { // Display all hospitals
+
+            // Display all hospitals
+            case 5: { 
                 manager.displayAllHospitals();
                 for (Hospital* h : manager.getHospitals()) {
                     h->updatePatientDays();
                 }
                 break;
             }
-            case 6: { // Discharge a patient
+
+            // Discharge a patient
+            case 6: {
                 int hospital_id, patient_id, doctor_id;
                 string temp;
 
@@ -205,15 +216,21 @@ int main() {
                 manager.dischargePatientFromHospital(hospital_id, patient_id, doctor_id);
                 break;
             }
-            case 7: { // Display all doctors 
+
+            // Display all doctors in all Hospital
+            case 7: { 
                 manager.displayAllDoctors();
                 break;
             }
-            case 8: { // Display all nurses 
+
+            // Display all nurses in all Hospital
+            case 8: { 
                 manager.displayAllNurses();
                 break;
             }
-            case 9: { // Pharmacy Management
+
+            // Pharmacy Management
+            case 9: { 
                 int pharmChoice;
                 string pharmInput;
                 

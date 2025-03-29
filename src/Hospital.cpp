@@ -21,8 +21,7 @@ class Hospital {
         std::vector<Patient*> patients;
         std::vector<Doctor*> doctors;
         std::vector<Nurse*> nurses;
-        std::vector<Doctor*>& getDoctors() { return doctors; } 
-        std::vector<Nurse*>& getNurses() { return nurses; }    
+
         // Constructor
         Hospital(std::string name, Database& database)
             : name{ name }
@@ -108,6 +107,9 @@ class Hospital {
         std::string getName() {
             return name;
         }
+
+        std::vector<Doctor*>& getDoctors() { return doctors; } 
+        std::vector<Nurse*>& getNurses() { return nurses; }    
 
         // Setter methods
         void setId(int id) {
@@ -249,6 +251,7 @@ class Hospital {
         }
 
     /*Other methods here*/
+    
         // Display the info of current Hospital
         void displayHospitalInfo() {
             std::cout << "Hospital id: " << id << std::endl;
@@ -256,5 +259,21 @@ class Hospital {
             std::cout << "Number of patients: " << patients.size() << std::endl;
             std::cout << "Number of doctors: " << doctors.size() << std::endl;
             std::cout << "Number of nurses: " << nurses.size() << std::endl;
+        }
+
+        /*Patient, Doctors and Nurse Relationship methods*/
+        // Assign Doctor to Patients and Vice Versa in db
+        void assignDoctorToPatient(int doctorID, int patientID, bool isPrimary) {
+            std::string sql = "INSERT INTO Doctor_Patient (doctor_id, patient_id, is_primary) VALUES ("
+                            + std::to_string(doctorID) + ", "
+                            + std::to_string(patientID) + ", "
+                            + std::to_string(isPrimary) + ");";
+            db.executeSQL(sql);
+        
+            std::cout << "Doctor ID " << doctorID << " assigned to Patient ID " << patientID;
+            if (isPrimary) {
+                std::cout << " as Primary Doctor";
+            }
+            std::cout << std::endl;
         }
 };

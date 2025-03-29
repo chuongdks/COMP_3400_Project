@@ -82,6 +82,26 @@ class Database {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS Doctor_Patient (
+                doctor_id INTEGER,
+                patient_id INTEGER,
+                is_primary INTEGER DEFAULT 0, 
+                FOREIGN KEY(doctor_id) REFERENCES Doctor(id) ON DELETE CASCADE,
+                FOREIGN KEY(patient_id) REFERENCES Patient(id) ON DELETE CASCADE,
+                PRIMARY KEY(doctor_id, patient_id)
+            );
+
+            CREATE TABLE IF NOT EXISTS Nurse_Patient (
+                nurse_id INTEGER,
+                patient_id INTEGER,
+                FOREIGN KEY(nurse_id) REFERENCES Nurse(id) ON DELETE CASCADE,
+                FOREIGN KEY(patient_id) REFERENCES Patient(id) ON DELETE CASCADE,
+                PRIMARY KEY(nurse_id, patient_id),
+                CONSTRAINT nurse_patient_limit CHECK (
+                    (SELECT COUNT(*) FROM Nurse_Patient np WHERE np.nurse_id = nurse_id) <= 2
+                )
+            );
         )";
 
         return executeSQL(sql);

@@ -2,6 +2,8 @@
 #define DOCTOR_CPP
 #include <iostream>
 #include <vector>
+#include "../database/Database.cpp"
+#include "./Patient.cpp"
 
 class Patient;
 
@@ -13,13 +15,16 @@ class Doctor {
     std::string role;
     std::string hospitalAdmitted;
     int hospitalId; 
-    std::vector<Patient*> patients; 
+
+    std::vector<Patient*> patients; // Doctor take cares of many patients
+    Database& db; 
 
     public: 
     // Constructor
-    Doctor(std::string name, std::string role)
+    Doctor(std::string name, std::string role, Database& database)
         : name{ name }
         , role{ role }
+        , db{ database }
     {}
 
     // Getter methods
@@ -34,10 +39,19 @@ class Doctor {
     void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
     
     /* Other methods */
-    // add patients for Doctor
-    void addPatient(Patient* p) { patients.push_back(p); }
-    
+    // add patients to Doctor
+    void addPatientToDoctor(Patient* patient, bool isPrimary) { 
+        patients.push_back(patient); 
+    }
 
+    // Display patients treated by this doctor
+    void displayPatients() {
+        std::cout << "Doctor: " << this->name << " is treating: \n";
+        for (auto patient : patients) {
+            std::cout << "- " << patient->getName() << "\n";
+        }
+    }
+    
 };
 
 #endif

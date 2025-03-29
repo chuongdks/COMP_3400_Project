@@ -2,8 +2,8 @@
 #define PATIENT_CPP
 #include <iostream>
 #include <vector>
-#include "Doctor.cpp"  
-#include "Nurse.cpp"
+#include "./Doctor.cpp"  
+#include "./Nurse.cpp"
 
 class Patient {
     public:
@@ -17,7 +17,9 @@ class Patient {
     int daysInHospital;
     std::string hospitalAdmitted;
     int hospitalId; 
-    std::vector<Doctor*> doctors; 
+
+    Doctor* primaryDoctor;           // Only 1 primary doctor
+    std::vector<Doctor*> doctors;    // Multiple treating doctors
     Nurse* primaryNurse; 
     Status status;
 
@@ -39,16 +41,39 @@ class Patient {
     int getHospitalId() const { return hospitalId; }
     Nurse* getPrimaryNurse() const { return primaryNurse; }
     std::vector<Doctor*> getDoctors() const { return doctors; }
+    Status getStatus() const { return status; }
 
     // Setter methods
     void setId(int id) { this->id = id; }
     void setDaysInHospital(int days) { this->daysInHospital = days; }
     void setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
-    void addDoctor(Doctor* d) { doctors.push_back(d); }
     void setPrimaryNurse(Nurse* n) { primaryNurse = n; }
     void setStatus(Status s) { status = s; }
-    Status getStatus() const { return status; }
     void incrementDays() { daysInHospital++; }
+
+    /* Other methods */
+    // Assign a primary doctor
+    void setPrimaryDoctor(Doctor* doctor) {
+        primaryDoctor = doctor;
+    }
+
+    // Add doctors to Patient
+    void addDoctor(Doctor* doctor) {
+        doctors.push_back(doctor);
+    }
+
+    // Display all doctors treating this patient
+    void displayDoctors() {
+        std::cout << "Patient: " << name << " is treated by:\n";
+        if (primaryDoctor) {
+            std::cout << "- Primary Doctor: " << primaryDoctor->getName() << "\n";
+        }
+        for (auto doctor : doctors) {
+            if (doctor != primaryDoctor) {
+                std::cout << "- " << doctor->getName() << "\n";
+            }
+        }
+    }
 };
 
 #endif

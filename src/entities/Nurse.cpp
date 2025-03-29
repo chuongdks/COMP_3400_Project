@@ -11,6 +11,7 @@ class Nurse {
     std::string name;
     std::string hospitalAdmitted;
     int hospitalId; 
+    
     std::vector<Patient*> patients; 
 
     public:

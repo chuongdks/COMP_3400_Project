@@ -12,12 +12,14 @@ class HospitalManager {
     // Constructor, program read data from hospital.db to fill the vector first
     HospitalManager(Database& database) 
         : db(database) 
-    {auto hospitalsData = db.getAllHospitals();
+    {
+        auto hospitalsData = db.getAllHospitals();
         for (const auto& [id, name] : hospitalsData) {
             Hospital* hospital = new Hospital(name, db);
             hospital->setId(id);
             hospitals.push_back(hospital);
-        }}
+        }
+    }
 
     // Destructor
     ~HospitalManager() {
