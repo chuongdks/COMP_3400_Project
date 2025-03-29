@@ -1,31 +1,33 @@
-#include <iostream>
+#include "Doctor.h"
+#include "Patient.h"
 
-class Doctor {
-    private:
-    int id;
-    std::string name;
-    std::string role;
+// Default Constructor
+Doctor::Doctor(std::string name, std::string role)
+    : name{ name }
+    , role{ role }
+{}
 
-    public: 
-    Doctor(int id, std::string name, std::string role)
-        : id{ id }
-        , name{ name }
-        , role{ role }
-    {}
+// Getter methods
+int Doctor::getId() const { return id; }
+std::string Doctor::getName() const { return name; }    
+std::string Doctor::getRole() const { return role; }    
+int Doctor::getHospitalId() const { return hospitalId; }
+std::vector<Patient*> Doctor::getPatients() const { return patients; }
 
-    // Getter methods
-    int getID() const {
-        return id;
-    }
-
-    std::string getName() {
-        return name;
-    }    
-
-    std::string getRole() {
-        return role;
-    }    
-
-    // Setter methods
+// Setter methods
+void Doctor::setId(int id) { this->id = id; }
+void Doctor::setHospitalId(int hid) { hospitalId = hid;}
     
-};
+/* Other methods */
+// add patients to Doctor
+void Doctor::addPatientToDoctor(Patient* patient) { 
+    patients.push_back(patient); 
+}
+
+// Display patients treated by this doctor
+void Doctor::displayPatients() {
+    std::cout << "Doctor: " << this->name << " is treating:\n";
+    for (auto patient : patients) {
+        std::cout << "- " << patient->getName() << "\n";
+    }
+}

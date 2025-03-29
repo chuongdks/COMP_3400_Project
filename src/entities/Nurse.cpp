@@ -1,22 +1,33 @@
-#include <iostream>
+#include "Nurse.h"
+#include "Patient.h"
 
-class Nurse {
-    private:
-    int id;
-    std::string name;
+// Constructor
+Nurse::Nurse(std::string name)
+    : name{ name }
+{}
 
-    public:
-    Nurse(int id, std::string name)
-        : id{ id }
-        , name{ name }
-    {}
+// Getter methods
+int Nurse::getId() const { return id; }
+std::string Nurse::getName() const { return name; }    
+int Nurse::getHospitalId() const { return hospitalId; }
+std::vector<Patient*> Nurse::getPatients() const { return patients; }
 
-    // Getter methods
-    int getID() const {
-        return id;
+// Setter methods
+void Nurse::setId(int id) { this->id = id; }
+void Nurse::setHospitalId(int hid) { hospitalId = hid; hospitalAdmitted = std::to_string(hid); }
+
+/* Other methods */ 
+// add patients to nurse
+void Nurse::addPatientToNurse(Patient* patient) { 
+    if (patients.size() < 2) {
+        patients.push_back(patient); 
     }
+}
 
-    std::string getName() {
-        return name;
-    }    
-};
+// Display patients treated by this nurse
+void Nurse::displayPatients() {
+    std::cout << "Doctor: " << this->name << " is treating:\n";
+    for (auto patient : patients) {
+        std::cout << "- " << patient->getName() << "\n";
+    }
+}
