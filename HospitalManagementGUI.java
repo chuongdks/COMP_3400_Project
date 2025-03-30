@@ -375,7 +375,7 @@ public class HospitalManagementGUI extends JFrame {
                 String selectedHospital = hospitalCombo.getSelectedItem().toString();
                 int hospitalId = Integer.parseInt(selectedHospital.split(":")[0].trim());
                 
-                String query = "INSERT INTO Patient (name, disease, bill, hospitalId) VALUES (?, ?, ?, ?)";
+                String query = "INSERT INTO Patient (name, disease, bill, id) VALUES (?, ?, ?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setString(1, name);
                 pstmt.setString(2, disease);
