@@ -99,6 +99,30 @@ class Database {
                 FOREIGN KEY(patient_id) REFERENCES Patient(id) ON DELETE CASCADE,
                 PRIMARY KEY(nurse_id, patient_id)
             );
+
+            CREATE TABLE IF NOT EXISTS Hospital_Doctor (
+                hospital_id INTEGER,
+                doctor_id INTEGER,
+                FOREIGN KEY (hospital_id) REFERENCES Hospital(id) ON DELETE CASCADE,
+                FOREIGN KEY (doctor_id) REFERENCES Doctor(id) ON DELETE CASCADE,
+                PRIMARY KEY (hospital_id, doctor_id)
+            );
+
+            CREATE TABLE IF NOT EXISTS Hospital_Nurse (
+                hospital_id INTEGER,
+                nurse_id INTEGER,
+                FOREIGN KEY (hospital_id) REFERENCES Hospital(id) ON DELETE CASCADE,
+                FOREIGN KEY (nurse_id) REFERENCES Nurse(id) ON DELETE CASCADE,
+                PRIMARY KEY (hospital_id, nurse_id)
+            );
+
+            CREATE TABLE IF NOT EXISTS Hospital_Patient (
+                hospital_id INTEGER,
+                patient_id INTEGER,
+                FOREIGN KEY (hospital_id) REFERENCES Hospital(id) ON DELETE CASCADE,
+                FOREIGN KEY (patient_id) REFERENCES Patient(id) ON DELETE CASCADE,
+                PRIMARY KEY (hospital_id, patient_id)
+            );
         )";
 
         return executeSQL(sql);

@@ -28,7 +28,10 @@ class HospitalManager {
     }
 
     /* Getter, Setter method for Hospital Manager */
-
+    // Getter for hospitals Vector
+    std::vector<Hospital*>& getHospitals() {
+        return hospitals;
+    }
 
     /* 
         Hospital Manager methods 
@@ -91,8 +94,17 @@ class HospitalManager {
     // Add Patient to a Specific Hospital
     void admitPatientToHospital(int hospitalID, Patient* patient) {
         for (Hospital* hospital : hospitals) {
+            // If Hospital id is found
             if (hospital->getId() == hospitalID) {
-                hospital->admitPatient(patient);        // Use the Hospital's method admitPatient()
+                // Use the Hospital's method admitPatient()
+                hospital->admitPatient(patient);        
+
+                // Execute the query
+                std::string sql = "INSERT INTO Hospital_Patient (hospital_id, patient_id) VALUES ("
+                                + std::to_string(hospitalID) + ", "
+                                + std::to_string(patient->getId()) + ");";
+                db.executeSQL(sql);
+
                 return;
             }
         }
@@ -102,8 +114,17 @@ class HospitalManager {
     // Remove Patient from a Specific Hospital
     void dischargePatientFromHospital(int hospitalID, int patientID, int doctorID) {
         for (Hospital* hospital : hospitals) {
+            // If Hospital id is found
             if (hospital->getId() == hospitalID) {
+                // execute the code part
                 hospital->dischargePatient(patientID, doctorID);
+
+                // Execute the query
+                std::string sql = "DELETE FROM Hospital_Patient WHERE hospital_id = "
+                                + std::to_string(hospitalID) + " AND patient_id = "
+                                + std::to_string(patientID) + ";";
+                db.executeSQL(sql);
+
                 return;
             }
         }
@@ -114,8 +135,17 @@ class HospitalManager {
     // Add Doctor to a Specific Hospital
     void assignDoctorToHospital(int hospitalID, Doctor* doctor) {
         for (Hospital* hospital : hospitals) {
+            // If Hospital id is found
             if (hospital->getId() == hospitalID) {
-                hospital->assignDoctor(doctor);        // Use the Hospital's method assignDoctor()
+                // Use the Hospital's method assignDoctor()
+                hospital->assignDoctor(doctor);       
+                
+                // Execute the query
+                std::string sql = "INSERT INTO Hospital_Doctor (hospital_id, doctor_id) VALUES ("
+                                + std::to_string(hospitalID) + ", "
+                                + std::to_string(doctor->getId()) + ");";
+                db.executeSQL(sql);
+
                 return;
             }
         }
@@ -125,8 +155,17 @@ class HospitalManager {
     // Remove a Doctor from a specific hospital
     void removeDoctorFromHospital(int hospitalID, int doctorID) {
         for (Hospital* hospital : hospitals) {
+            // If Hospital id is found
             if (hospital->getId() == hospitalID) {
-                hospital->removeDoctor(doctorID);      // Use the Hospital's method removeDoctor()
+                // Use the Hospital's method removeDoctor()
+                hospital->removeDoctor(doctorID);      
+
+                // Execute the query
+                std::string sql = "DELETE FROM Hospital_Doctor WHERE hospital_id = "
+                                + std::to_string(hospitalID) + " AND doctor_id = "
+                                + std::to_string(doctorID) + ";";
+                db.executeSQL(sql);
+
                 return;
             }
         }
@@ -137,8 +176,17 @@ class HospitalManager {
     // Add Nurse to a Specific Hospital
     void assignNurseToHospital(int hospitalID, Nurse* nurse) {
         for (Hospital* hospital : hospitals) {
+            // If Hospital id is found
             if (hospital->getId() == hospitalID) {
-                hospital->assignNurse(nurse);           // Use the Hospital's method assignNurse()
+                // Use the Hospital's method assignNurse()
+                hospital->assignNurse(nurse);        
+                
+                // Execute the query
+                std::string sql = "INSERT INTO Hospital_Nurse (hospital_id, nurse_id) VALUES ("
+                                + std::to_string(hospitalID) + ", "
+                                + std::to_string(nurse->getId()) + ");";
+                db.executeSQL(sql);
+
                 return;
             }
         }
@@ -148,17 +196,21 @@ class HospitalManager {
     // Remove a Nurse from a specific hospital
     void removeNurseFromHospital(int hospitalID, int nurseID) {
         for (Hospital* hospital : hospitals) {
+            // If Hospital id is found
             if (hospital->getId() == hospitalID) {
-                hospital->removeNurse(nurseID);  // Use the Hospital's method removeNurse()
+                // Use the Hospital's method removeNurse()
+                hospital->removeNurse(nurseID);  
+
+                std::string sql = "DELETE FROM Hospital_Nurse WHERE hospital_id = "
+                                + std::to_string(hospitalID) + " AND nurse_id = "
+                                + std::to_string(nurseID) + ";";
+                db.executeSQL(sql);
                 return;
             }
         }
         std::cout << "Hospital with ID " << hospitalID << " not found.\n";
     }
     
-    std::vector<Hospital*>& getHospitals() {
-        return hospitals;
-    }
 /* Doctors-Patients Relationshiop */
     // Assign Doctor to Patients
     void assignDoctorToPatient(int hospitalId, int doctorId, int patientId, bool isPrimary) {
